@@ -1,6 +1,8 @@
 import fs from "fs";
 import axios from "axios";
 import getAccessToken from "./zoomAuth.js";
+import { convertToAudio } from "../utils/ffmpeg.js";
+import { transcribeAudioLocal } from "./transcriptionService.js";
 
 export async function processRecording(url) {
   try {
@@ -21,15 +23,23 @@ export async function processRecording(url) {
     }
 
     const response = await axios.get(url, config);
-    console.log(response) ;
 
-    const filePath = `src/uploads/recording_${Date.now()}.mp4`;
-    const writer = fs.createWriteStream(filePath);
+    const videoPath = `src/uploads/recording_${Date.now()}.mp4`;
+    const writer = fs.createWriteStream(videoPath);
 
     response.data.pipe(writer);
 
-    writer.on("finish", () => {
-      console.log("✅ Downloaded:", filePath);
+    writer.on("finish", async () => {
+      console.log("✅ Downloaded:", videoPath);
+
+      try {
+        const audioPath = await convertToAudio(videoPath);
+        console.log("🎧 Ready for transcription:", audioPath);
+        // 🔥 STEP 2 (next): call transcription here
+        const transcript = await transcribeAudioLocal(audioPath);
+      } catch (err) {
+        console.error("Processing pipeline error:", err);
+      }
     });
 
     writer.on("error", (err) => {
