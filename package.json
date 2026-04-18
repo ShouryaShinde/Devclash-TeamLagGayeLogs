@@ -24,6 +24,7 @@
     "express": "^5.2.1",
     "fluent-ffmpeg": "^2.1.3",
     "fs": "^0.0.1-security",
+    "openai": "^6.34.0",
     "router": "^2.2.0"
   }
 }
