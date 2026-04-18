@@ -12,7 +12,7 @@
   },
   "license": "ISC",
   "author": "",
-  "type": "module.js",
+  "type": "module",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,6 +21,9 @@
     "axios": "^1.15.0",
     "dotenv": "^17.4.2",
     "ejs": "^5.0.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "fluent-ffmpeg": "^2.1.3",
+    "fs": "^0.0.1-security",
+    "router": "^2.2.0"
   }
 }
