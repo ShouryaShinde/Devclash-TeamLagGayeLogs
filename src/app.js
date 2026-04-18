@@ -21,5 +21,7 @@ app.use("/api/zoom", zoomRoutes);
 
 app.get("/", (req, res) => res.render("home"));
 app.get("/dashboard", (req, res) => res.render("dashboard"));
+app.get("/working" , (req,res) => res.render("working")) ;
+app.get("/login" , (req,res) => res.render("login")) ;
 
 app.listen(3000, () => console.log("Server running"));
