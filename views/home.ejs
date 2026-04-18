@@ -1,113 +1,109 @@
-<%- include("partials/header.ejs")%>
+<%- include("partials/header.ejs") %>
 
-<div class="page-wrapper">
-
-  <!-- HERO -->
-  <section class="py-5">
-    <div class="row flex-lg-row-reverse align-items-center g-5 py-4">
-      <div class="col-10 col-sm-8 col-lg-6">
-        <img src="/images/zoom.jpg" class="d-block mx-lg-auto img-fluid rounded-4" alt="Briefly app">
-      </div>
-      <div class="col-lg-6">
-        <span class="badge text-bg-primary mb-3 px-3 py-2 rounded-pill">✦ AI-powered</span>
-        <h1 class="display-5 fw-bold text-body-emphasis mb-3">Simplify your workflow with Briefly</h1>
-        <p class="lead">Keep your tasks, notes, and goals organized without the clutter.</p>
-        <div class="d-grid gap-2 d-md-flex mt-4">
-          <button class="btn btn-primary btn-lg px-4">Get Started</button>
-          <button class="btn btn-outline-secondary btn-lg px-4">See how it works</button>
+  <div class="container">
+    <section class="py-5 animate-on-scroll">
+      <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+        <div class="col-10 col-sm-8 col-lg-6 mx-auto">
+          <img src="/images/zoom.jpg" onerror="this.src='https://placehold.co/800x600?text=App+Interface'"
+            class="d-block mx-lg-auto img-fluid rounded-4 shadow-lg" alt="Briefly app interface">
         </div>
+        <div class="col-lg-6">
+          <span class="badge bg-primary-subtle text-primary mb-3 px-3 py-2 rounded-pill fw-semibold">
+            <i class="bi bi-stars"></i> AI-powered Intelligence
+          </span>
+          <h1 class="display-4 fw-bold text-dark mb-4 lh-sm">Simplify your workflow with <span
+              class="text-primary">Briefly</span></h1>
+          <p class="lead text-muted mb-4">Keep your tasks, notes, and goals organized without the clutter. Briefly
+            silently captures what matters in your meetings.</p>
+          <div class="d-grid gap-3 d-md-flex mt-4">
+            <a href="/login" class="btn btn-primary btn-lg px-4 rounded-pill">Get Started Free</a>
+            <a href="/working" class="btn btn-outline-secondary btn-lg px-4 rounded-pill">See how it works</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-5 my-5 animate-on-scroll">
+      <div class="text-center mb-5">
+        <p class="section-label text-uppercase">What Briefly Does</p>
+        <h2 class="display-6 fw-bold">Three things that actually matter</h2>
+      </div>
+
+      <div class="row g-4 justify-content-center">
+        <div class="col-md-6 col-lg-4 d-flex">
+          <div class="section-card p-4 rounded-4 w-100 text-center">
+            <div class="icon-box mx-auto mb-4"><i class="bi bi-list-check"></i></div>
+            <h3 class="fs-5 fw-bold mb-3">Live Action Items</h3>
+            <p class="text-muted">Tasks are captured and tracked automatically the moment they are mentioned.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 d-flex">
+          <div class="section-card p-4 rounded-4 w-100 text-center">
+            <div class="icon-box mx-auto mb-4"><i class="bi bi-file-earmark-text"></i></div>
+            <h3 class="fs-5 fw-bold mb-3">Real-Time Summary</h3>
+            <p class="text-muted">Watch the meeting notes construct themselves continuously while you speak.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 d-flex">
+          <div class="section-card p-4 rounded-4 w-100 text-center">
+            <div class="icon-box mx-auto mb-4"><i class="bi bi-diagram-3"></i></div>
+            <h3 class="fs-5 fw-bold mb-3">Meeting Memory</h3>
+            <p class="text-muted">Track recurring discussions and unresolved topics across multiple meetings.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="py-5 dark-section animate-on-scroll">
+    <div class="container py-5">
+      <div class="text-center mb-5">
+        <p class="section-label-dark text-uppercase">Why Teams Love It</p>
+        <h2 class="display-6 fw-bold mb-3">Honestly, it just works.</h2>
+        <p class="lead">No fluff, no steep learning curve.</p>
+      </div>
+
+      <div class="row g-4 px-lg-5">
+        <div class="col-md-6 d-flex gap-4 align-items-start">
+          <div class="feature-icon-dark flex-shrink-0"><i class="bi bi-rocket-takeoff"></i></div>
+          <div>
+            <h4 class="h5 mb-2">Instant Setup</h4>
+            <p class="mb-0">Connect your calendar and start tracking in under two minutes.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 d-flex gap-4 align-items-start">
+          <div class="feature-icon-dark flex-shrink-0"><i class="bi bi-people"></i></div>
+          <div>
+            <h4 class="h5 mb-2">Built for Teams</h4>
+            <p class="mb-0">Keep engineering, product, and design aligned automatically.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 d-flex gap-4 align-items-start">
+          <div class="feature-icon-dark flex-shrink-0"><i class="bi bi-shield-lock"></i></div>
+          <div>
+            <h4 class="h5 mb-2">Private & Secure</h4>
+            <p class="mb-0">Enterprise-grade encryption ensures your company data stays yours.</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 d-flex gap-4 align-items-start">
+          <div class="feature-icon-dark flex-shrink-0"><i class="bi bi-puzzle"></i></div>
+          <div>
+            <h4 class="h5 mb-2">Works with Your Tools</h4>
+            <p class="mb-0">Push tasks directly to Jira, Notion, Slack, and Asana.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-5 pt-4">
+        <a href="/login" class="btn btn-secondary btn-lg px-5 rounded-pill fw-bold text-dark bg-white border-0">Start
+          for free</a>
       </div>
     </div>
   </section>
 
-  <!-- FEATURES -->
-  <section class="py-5">
-    <div class="py-3">
-      <p class="text-center section-label">WHAT BRIEFLY DOES</p>
-      <h2 class="text-center section-title">Three things that actually matter</h2>
-
-      <div class="row g-4 row-cols-1 row-cols-lg-3">
-
-        <div class="col d-flex">
-          <div class="p-4 rounded-4 w-100 section-card">
-            <div class="icon-box mb-3"></div>
-            <h3 class="fs-4 fw-semibold">Live Action Item Detection</h3>
-            <p class="text-muted">Tasks are captured and tracked automatically.</p>
-            <button class="btn btn-primary btn-sm">Learn more</button>
-          </div>
-        </div>
-
-        <div class="col d-flex">
-          <div class="p-4 rounded-4 w-100 section-card">
-            <div class="icon-box mb-3"></div>
-            <h3 class="fs-4 fw-semibold">Real-Time Summary</h3>
-            <p class="text-muted">Live summaries update continuously.</p>
-            <button class="btn btn-primary btn-sm">Learn more</button>
-          </div>
-        </div>
-
-        <div class="col d-flex">
-          <div class="p-4 rounded-4 w-100 section-card">
-            <div class="icon-box mb-3"></div>
-            <h3 class="fs-4 fw-semibold">Meeting Memory</h3>
-            <p class="text-muted">Track recurring discussions easily.</p>
-            <button class="btn btn-primary btn-sm">Learn more</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- WHY -->
-  <section class="py-5 dark-section">
-    <div class="py-3">
-      <p class="text-center section-label-dark">WHY TEAMS LOVE IT</p>
-      <h2 class="text-center section-title-dark">Honestly, it just works.</h2>
-      <p class="text-center section-subtext">No fluff, no steep learning curve.</p>
-
-      <div class="row g-4 row-cols-1 row-cols-md-2">
-
-        <div class="col d-flex gap-3">
-          <div class="feature-icon-dark"></div>
-          <div>
-            <h4>Instant Setup</h4>
-            <p>Start in under two minutes.</p>
-          </div>
-        </div>
-
-        <div class="col d-flex gap-3">
-          <div class="feature-icon-dark"></div>
-          <div>
-            <h4>Built for Teams</h4>
-            <p>Stay aligned across teams.</p>
-          </div>
-        </div>
-
-        <div class="col d-flex gap-3">
-          <div class="feature-icon-dark"></div>
-          <div>
-            <h4>Private & Secure</h4>
-            <p>Your data stays yours.</p>
-          </div>
-        </div>
-
-        <div class="col d-flex gap-3">
-          <div class="feature-icon-dark"></div>
-          <div>
-            <h4>Works with Your Tools</h4>
-            <p>Fits into your workflow.</p>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="text-center mt-5">
-        <button class="btn btn-primary btn-lg px-5">Start for free</button>
-      </div>
-    </div>
-  </section>
-
-</div>
-
-<%- include("partials/footer.ejs")%>
+  <%- include("partials/footer.ejs") %>

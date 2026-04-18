@@ -1,101 +1,80 @@
-```html
 <%- include("partials/header.ejs") %>
 
-<div class="container py-5 working-page">
+  <div class="container py-5 working-page animate-on-scroll">
+    <div class="text-center mb-5 pb-3">
+      <h1 class="display-6 fw-bold">How Briefly Works</h1>
+      <p class="lead text-muted max-w-lg mx-auto">
+        From raw conversation to structured outcomes—without lifting a finger.
+      </p>
+    </div>
 
-  <!-- Hero -->
-  <div class="text-center mb-5">
-    <h2 class="fw-bold">How Briefly Works</h2>
-    <p class="text-muted">
-      From raw conversation to structured outcomes—without lifting a finger.
-    </p>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4">
+        <div class="step-card h-100">
+          <div class="step-number">01</div>
+          <h5 class="fw-bold mt-3">Runs in the Background</h5>
+          <p class="text-muted mt-2 mb-0">
+            The moment your meeting starts, Briefly begins listening through system audio. No bots joining the call,
+            just a silent layer capturing context.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="step-card h-100">
+          <div class="step-number">02</div>
+          <h5 class="fw-bold mt-3">Understands Context</h5>
+          <p class="text-muted mt-2 mb-0">
+            Conversations are transcribed instantly. Decisions, action items, and key discussions are tagged the moment
+            they’re spoken.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="step-card h-100">
+          <div class="step-number">03</div>
+          <h5 class="fw-bold mt-3">Visual Memory</h5>
+          <p class="text-muted mt-2 mb-0">
+            Important visuals like slides or diagrams are automatically captured with timestamps—so nothing is lost
+            beyond words.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="step-card h-100">
+          <div class="step-number">04</div>
+          <h5 class="fw-bold mt-3">Live Dashboard Updates</h5>
+          <p class="text-muted mt-2 mb-0">
+            A live dashboard shows a running summary and evolving task list, giving everyone a shared understanding of
+            progress in real time.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="step-card h-100">
+          <div class="step-number">05</div>
+          <h5 class="fw-bold mt-3">Structured Output</h5>
+          <p class="text-muted mt-2 mb-0">
+            Once the meeting ends, Briefly generates a complete summary including open questions, and personalized
+            action items.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="step-card h-100">
+          <div class="step-number">06</div>
+          <h5 class="fw-bold mt-3">Historical Tracking</h5>
+          <p class="text-muted mt-2 mb-0">
+            Across meetings, recurring unresolved topics are tracked and surfaced—revealing blockers before they become
+            problems.
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Steps -->
-  <div class="row g-4">
-
-    <!-- Step 1 -->
-    <div class="col-lg-4">
-      <div class="step-card h-100">
-        <div class="step-number">01</div>
-        <h5 class="mt-3">Runs in the Background</h5>
-        <p class="text-muted small">
-          The moment your meeting starts, Briefly begins listening through system audio.
-          No setup, no interruptions—just a silent layer capturing everything in real time.
-        </p>
-      </div>
-    </div>
-
-    <!-- Step 2 -->
-    <div class="col-lg-4">
-      <div class="step-card h-100">
-        <div class="step-number">02</div>
-        <h5 class="mt-3">Understands What’s Said</h5>
-        <p class="text-muted small">
-          Conversations are transcribed instantly and analyzed as they happen.
-          Decisions, action items, and key discussions are identified the moment they’re spoken.
-        </p>
-      </div>
-    </div>
-
-    <!-- Step 3 -->
-    <div class="col-lg-4">
-      <div class="step-card h-100">
-        <div class="step-number">03</div>
-        <h5 class="mt-3">Captures Context</h5>
-        <p class="text-muted small">
-          Important visuals like slides, documents, or diagrams are automatically captured
-          with timestamps—so nothing is lost beyond words.
-        </p>
-      </div>
-    </div>
-
-    <!-- Step 4 -->
-    <div class="col-lg-4">
-      <div class="step-card h-100">
-        <div class="step-number">04</div>
-        <h5 class="mt-3">Updates Live During the Meeting</h5>
-        <p class="text-muted small">
-          A live dashboard shows a running summary and evolving task list,
-          giving everyone a clear, shared understanding of progress in real time.
-        </p>
-      </div>
-    </div>
-
-    <!-- Step 5 -->
-    <div class="col-lg-4">
-      <div class="step-card h-100">
-        <div class="step-number">05</div>
-        <h5 class="mt-3">Delivers Structured Output</h5>
-        <p class="text-muted small">
-          As soon as the meeting ends, Briefly generates a complete summary—
-          including decisions, open questions, and personalized action items for each participant.
-        </p>
-      </div>
-    </div>
-
-    <!-- Step 6 -->
-    <div class="col-lg-4">
-      <div class="step-card h-100">
-        <div class="step-number">06</div>
-        <h5 class="mt-3">Tracks What Others Forget</h5>
-        <p class="text-muted small">
-          Across meetings, recurring unresolved topics are tracked and surfaced—
-          revealing patterns and blockers before they become bigger problems.
-        </p>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Closing line -->
-  <div class="text-center mt-5">
-    <p class="text-muted">
-    
-    </p>
-  </div>
-
-</div>
-
-<%- include("partials/footer.ejs") %>
-```
+  <%- include("partials/footer.ejs") %>
