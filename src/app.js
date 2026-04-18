@@ -20,5 +20,6 @@ app.get("/", (req, res) => res.render("home"));
 app.get("/dashboard", (req, res) => res.render("dashboard"));
 app.get("/working" , (req,res) => res.render("working")) ;
 app.get("/login" , (req,res) => res.render("login")) ;
+app.get("/uploads" , (req,res) => res.render("uploads")) ;
 
 app.listen(3000, () => console.log("Server running"));

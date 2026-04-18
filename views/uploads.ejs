@@ -1,8 +1,66 @@
 <%- include("partials/header.ejs") %>
 
     <div class="container py-5">
-        <h1>Uploads</h1>
-        <p>Welcome to the Uploads page!</p>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+
+                <div class="upload-dropzone text-center p-5 rounded-4">
+                    <div class="mb-4">
+                        <div class="upload-icon-wrapper mx-auto mb-3">
+                            <i class="bi bi-cloud-arrow-up-fill text-primary"></i>
+                        </div>
+                        <h4 class="fw-bold mb-1">Upload your files</h4>
+                        <p class="text-muted small">Drag and drop your files here, or click to browse.</p>
+                    </div>
+
+                    <div class="btn-group shadow-sm">
+                        <label class="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 m-0 cursor-pointer">
+                            <i class="bi bi-file-earmark-plus"></i> Choose Files
+                            <input type="file" multiple class="d-none">
+                        </label>
+
+                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split px-3"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+
+                        <ul class="upload-dropdown-menu dropdown-menu shadow-lg border-0 mt-2 rounded-3">
+                            <li>
+                                <label class="dropdown-item d-flex align-items-center gap-3 py-2 cursor-pointer">
+                                    <i class="bi bi-laptop text-primary"></i> From Device
+                                    <input type="file" multiple class="d-none">
+                                </label>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-3 py-2 text-muted disabled"
+                                    href="#">
+                                    <i class="bi bi-dropbox"></i> From Dropbox <span
+                                        class="badge bg-light text-secondary ms-auto"
+                                        style="font-size: 0.6rem;">SOON</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-3 py-2 text-muted disabled"
+                                    href="#">
+                                    <i class="bi bi-google"></i> Google Drive <span
+                                        class="badge bg-light text-secondary ms-auto"
+                                        style="font-size: 0.6rem;">SOON</span>
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-3 py-2" href="#">
+                                    <i class="bi bi-link-45deg text-primary"></i> From URL
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 
-<%- include("partials/footer.ejs") %>
+    <%- include("partials/footer.ejs") %>
