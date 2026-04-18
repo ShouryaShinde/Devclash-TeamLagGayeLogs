@@ -1,0 +1,26 @@
+{
+  "name": "devclash",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/ShouryaShinde/Devclash-TeamLagGayeLogs#readme",
+  "bugs": {
+    "url": "https://github.com/ShouryaShinde/Devclash-TeamLagGayeLogs/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShouryaShinde/Devclash-TeamLagGayeLogs.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module.js",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^1.15.0",
+    "dotenv": "^17.4.2",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1"
+  }
+}
