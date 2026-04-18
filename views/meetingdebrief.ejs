@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#004c6e",
+                        "error": "#ffb4ab",
+                        "on-primary": "#1000a9",
+                        "surface-container": "#1d2026",
+                        "on-primary-container": "#d9d8ff",
+                        "inverse-on-surface": "#2e3037",
+                        "surface-bright": "#363940",
+                        "on-tertiary": "#00344d",
+                        "surface": "#10131a",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "secondary": "#44e2cd",
+                        "primary-container": "#4b4dd8",
+                        "surface-variant": "#32353c",
+                        "on-background": "#e1e2eb",
+                        "surface-container-low": "#191c22",
+                        "outline-variant": "#464555",
+                        "on-secondary-container": "#004d44",
+                        "on-error-container": "#ffdad6",
+                        "inverse-surface": "#e1e2eb",
+                        "primary": "#c0c1ff",
+                        "on-secondary-fixed": "#00201c",
+                        "on-secondary-fixed-variant": "#005047",
+                        "primary-fixed": "#e1e0ff",
+                        "on-surface": "#e1e2eb",
+                        "surface-container-high": "#272a31",
+                        "background": "#10131a",
+                        "tertiary-fixed-dim": "#89ceff",
+                        "on-tertiary-container": "#b8e0ff",
+                        "surface-container-lowest": "#0b0e14",
+                        "inverse-primary": "#494bd6",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "on-error": "#690005",
+                        "surface-dim": "#10131a",
+                        "outline": "#918fa1",
+                        "tertiary": "#89ceff",
+                        "on-surface-variant": "#c7c4d8",
+                        "error-container": "#93000a",
+                        "tertiary-container": "#006693",
+                        "on-secondary": "#003731",
+                        "secondary-container": "#03c6b2",
+                        "on-primary-fixed": "#07006c",
+                        "on-tertiary-fixed": "#001e2f",
+                        "surface-tint": "#c0c1ff",
+                        "secondary-fixed-dim": "#3cddc7",
+                        "secondary-fixed": "#62fae3",
+                        "tertiary-fixed": "#c9e6ff",
+                        "surface-container-highest": "#32353c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-sidebar {
+            background: rgba(25, 28, 34, 0.8);
+            backdrop-filter: blur(20px);
+        }
+        .ai-gradient {
+            background: linear-gradient(135deg, #c0c1ff 0%, #4b4dd8 100%);
+        }
+        .ghost-border {
+            outline: 1px solid rgba(70, 69, 85, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary/30">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 glass-sidebar shadow-[20px_0_40px_rgba(0,0,0,0.4)] flex flex-col p-4 gap-y-6">
+<div class="flex flex-col gap-1 px-2">
+<h1 class="text-lg font-bold tracking-tighter text-[#e1e2eb]">Silent Architect</h1>
+<p class="text-[10px] font-label uppercase tracking-widest text-secondary flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary shadow-[0_0_8px_rgba(68,226,205,0.6)]"></span>
+                AI Intelligence Active
+            </p>
+</div>
+<nav class="flex-1 flex flex-col gap-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-[#c7c4d8] hover:text-[#e1e2eb] hover:bg-[#272a31]/50 transition-all duration-300 ease-in-out font-medium text-sm rounded-md scale-98 active:scale-95" href="#">
+<span class="material-symbols-outlined text-lg">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#c7c4d8] hover:text-[#e1e2eb] hover:bg-[#272a31]/50 transition-all duration-300 ease-in-out font-medium text-sm rounded-md scale-98 active:scale-95" href="#">
+<span class="material-symbols-outlined text-lg">podcasts</span>
+                Live Companion
+            </a>
+<!-- Active Tab: Meeting Debriefs -->
+<a class="flex items-center gap-3 px-3 py-2 bg-[#272a31] text-[#c0c1ff] font-semibold rounded-md transition-all duration-300 ease-in-out text-sm scale-98 active:scale-95" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">summarize</span>
+                Meeting Debriefs
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#c7c4d8] hover:text-[#e1e2eb] hover:bg-[#272a31]/50 transition-all duration-300 ease-in-out font-medium text-sm rounded-md scale-98 active:scale-95" href="#">
+<span class="material-symbols-outlined text-lg">analytics</span>
+                Analytics
+            </a>
+</nav>
+<button class="ai-gradient text-on-primary py-2.5 px-4 rounded-md font-semibold text-sm shadow-lg shadow-primary-container/20 scale-98 active:scale-95 transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+            Capture Insight
+        </button>
+<div class="mt-auto flex flex-col gap-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-[#c7c4d8] hover:text-[#e1e2eb] hover:bg-[#272a31]/50 transition-all duration-300 ease-in-out font-medium text-sm rounded-md" href="#">
+<span class="material-symbols-outlined text-lg">extension</span>
+                Integrations
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#c7c4d8] hover:text-[#e1e2eb] hover:bg-[#272a31]/50 transition-all duration-300 ease-in-out font-medium text-sm rounded-md" href="#">
+<span class="material-symbols-outlined text-lg">settings</span>
+                Settings
+            </a>
+<div class="mt-4 pt-4 border-t border-outline-variant/10 flex items-center gap-3 px-2">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="professional portrait of a male executive in a charcoal suit, soft studio lighting, focused gaze, high-end corporate style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRyq3qVTGhXaFVpDvMcapM7ablcyy3fq0-cVXoE9tjthwAnrsz88N-uvaiGjK-PRGQxmoRGBI6NHqrwtbuGjFf6WCOnkZwb0ln7EieOJ3AHuS2CwP765G0Pug3wQfFsu7lRNRXXfDIX-fz9eHlFRiiZdoX79CafLOzEyv6XsuLGsJa6nZ3aYBp83p2M8nvfD4c3nshl7-uLRgZ1QtaIAGHokz7ajCg2EeBZmE1LbmqP87lktmWokpkRa-vwXKewcDw8MiS96BeCECx"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-on-surface">Alex Sterling</span>
+<span class="text-[10px] text-on-surface-variant">Product Principal</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-40 bg-[#10131a]/90 backdrop-blur-md ml-64 max-w-[calc(100%-16rem)] flex justify-between items-center px-8 py-3">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2 bg-surface-container-lowest px-4 py-1.5 rounded-full ghost-border">
+<span class="material-symbols-outlined text-on-surface-variant text-lg">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-64 text-on-surface placeholder-on-surface-variant/50" placeholder="Search insights..." type="text"/>
+</div>
+<nav class="flex items-center gap-6 text-sm font-medium">
+<a class="text-[#c7c4d8] hover:text-[#e1e2eb] transition-colors" href="#">Recent</a>
+<a class="text-[#c7c4d8] hover:text-[#e1e2eb] transition-colors" href="#">Pinned</a>
+<a class="text-[#c7c4d8] hover:text-[#e1e2eb] transition-colors" href="#">Blocked</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low rounded-md">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="text-xs font-label text-on-surface-variant">Live Status</span>
+</div>
+<button class="ghost-border text-on-surface text-sm px-4 py-1.5 rounded-md hover:bg-surface-container-high transition-all">
+                Record Meeting
+            </button>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Stage -->
+<main class="ml-64 p-8 min-h-screen">
+<!-- Header Section -->
+<div class="max-w-6xl mx-auto mb-10">
+<div class="flex items-end justify-between mb-6">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="bg-secondary/10 text-secondary text-[10px] font-bold px-2 py-0.5 rounded tracking-widest uppercase">Post-Meeting Report</span>
+<span class="text-on-surface-variant text-sm">Oct 24, 2023 • 45m 12s</span>
+</div>
+<h2 class="text-4xl font-extrabold tracking-tight text-on-surface">Q4 Product Architecture Alignment</h2>
+</div>
+<div class="flex gap-3">
+<button class="ghost-border px-5 py-2.5 rounded-md flex items-center gap-2 text-sm font-semibold hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+                        Schedule Follow-up
+                    </button>
+<button class="ai-gradient text-on-primary px-5 py-2.5 rounded-md flex items-center gap-2 text-sm font-semibold shadow-xl shadow-primary-container/20 hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-lg">sync</span>
+                        Sync to Jira
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-6">
+<!-- 1. Executive Summary -->
+<div class="col-span-8 bg-surface-container-low rounded-xl p-8 relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary-container"></div>
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h3 class="text-xs font-bold uppercase tracking-[0.2em] text-primary-fixed-dim">Executive Summary</h3>
+</div>
+<p class="text-xl leading-relaxed text-on-surface font-light">
+                        The session focused on resolving the latency bottlenecks in the <span class="text-primary font-medium">Core API 2.0</span>. The architecture team reached a consensus on adopting a <span class="text-secondary font-medium">distributed caching strategy</span>. While the primary timeline remains intact, there is a recognized risk regarding the legacy data migration scheduled for Week 6.
+                    </p>
+<div class="mt-8 grid grid-cols-3 gap-6">
+<div class="bg-surface-container rounded-lg p-4">
+<span class="block text-[10px] text-on-surface-variant uppercase tracking-widest mb-1">Sentiment</span>
+<span class="text-lg font-bold text-secondary flex items-center gap-2">Decisive <span class="material-symbols-outlined text-sm">trending_up</span></span>
+</div>
+<div class="bg-surface-container rounded-lg p-4">
+<span class="block text-[10px] text-on-surface-variant uppercase tracking-widest mb-1">Key Topic</span>
+<span class="text-lg font-bold text-on-surface">Cloud Infra</span>
+</div>
+<div class="bg-surface-container rounded-lg p-4">
+<span class="block text-[10px] text-on-surface-variant uppercase tracking-widest mb-1">Confidence</span>
+<span class="text-lg font-bold text-on-surface">94.2%</span>
+</div>
+</div>
+</div>
+<!-- 3. Open Questions -->
+<div class="col-span-4 bg-surface-container-high rounded-xl p-8 flex flex-col">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-tertiary">help_center</span>
+<h3 class="text-xs font-bold uppercase tracking-[0.2em] text-tertiary">Open Questions</h3>
+</div>
+<div class="flex flex-col gap-6 flex-1">
+<div class="flex gap-4">
+<span class="text-tertiary font-mono text-xs mt-1">01</span>
+<p class="text-sm text-on-surface-variant leading-relaxed">How will the new caching layer affect the existing WebSocket connections during peak hours?</p>
+</div>
+<div class="flex gap-4">
+<span class="text-tertiary font-mono text-xs mt-1">02</span>
+<p class="text-sm text-on-surface-variant leading-relaxed">Can the data migration be phased across multiple regional clusters to mitigate risk?</p>
+</div>
+<div class="flex gap-4">
+<span class="text-tertiary font-mono text-xs mt-1">03</span>
+<p class="text-sm text-on-surface-variant leading-relaxed">Is there a fallback plan if the Redis cluster exceeds the 250ms latency threshold?</p>
+</div>
+</div>
+<button class="mt-auto w-full py-2 bg-surface-container-highest text-tertiary text-xs font-bold rounded hover:bg-surface-bright transition-colors uppercase tracking-widest">
+                        Draft Answers with AI
+                    </button>
+</div>
+<!-- 2. Decisions Made -->
+<div class="col-span-12 bg-surface-container-low rounded-xl p-8">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">verified</span>
+<h3 class="text-xs font-bold uppercase tracking-[0.2em] text-secondary">Decisions Made</h3>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-8">
+<div class="p-6 bg-surface-container rounded-xl border-l-4 border-secondary/40">
+<h4 class="text-on-surface font-bold mb-2">Architectural Shift</h4>
+<p class="text-sm text-on-surface-variant">Approved transition from monolithic DB queries to a micro-services based retrieval for the analytics engine.</p>
+</div>
+<div class="p-6 bg-surface-container rounded-xl border-l-4 border-secondary/40">
+<h4 class="text-on-surface font-bold mb-2">Vendor Selection</h4>
+<p class="text-sm text-on-surface-variant">Confirmed AWS Elasticache (Redis) as the primary provider for the global caching project.</p>
+</div>
+<div class="p-6 bg-surface-container rounded-xl border-l-4 border-secondary/40">
+<h4 class="text-on-surface font-bold mb-2">Launch Window</h4>
+<p class="text-sm text-on-surface-variant">The Q4 production release is officially locked for December 12th, pending final load tests.</p>
+</div>
+</div>
+</div>
+<!-- 5. Action Items (Tabbed View) -->
+<div class="col-span-7 bg-surface-container-low rounded-xl overflow-hidden flex flex-col h-[500px]">
+<div class="flex border-b border-outline-variant/10">
+<button class="flex-1 py-4 text-xs font-bold uppercase tracking-widest text-primary border-b-2 border-primary bg-surface-container-high/30">My Tasks</button>
+<button class="flex-1 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors">Team Tasks</button>
+</div>
+<div class="p-8 flex flex-col gap-4 overflow-y-auto">
+<div class="group flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container-highest transition-all border border-transparent hover:border-outline-variant/20">
+<div class="w-5 h-5 rounded border-2 border-primary/40 flex items-center justify-center group-hover:border-primary transition-colors cursor-pointer"></div>
+<div class="flex-1">
+<p class="text-sm font-medium text-on-surface">Update the infrastructure diagram with Redis clusters</p>
+<span class="text-[10px] text-on-surface-variant">Due Oct 27 • High Priority</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">more_vert</span>
+</div>
+<div class="group flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container-highest transition-all border border-transparent hover:border-outline-variant/20">
+<div class="w-5 h-5 rounded border-2 border-primary/40 flex items-center justify-center group-hover:border-primary transition-colors cursor-pointer"></div>
+<div class="flex-1">
+<p class="text-sm font-medium text-on-surface">Review the migration scripts from the DevOps team</p>
+<span class="text-[10px] text-on-surface-variant">Due Oct 29 • Documentation</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">more_vert</span>
+</div>
+<div class="group flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container-highest transition-all border border-transparent hover:border-outline-variant/20">
+<div class="w-5 h-5 rounded border-2 border-primary/40 flex items-center justify-center group-hover:border-primary transition-colors cursor-pointer"></div>
+<div class="flex-1">
+<p class="text-sm font-medium text-on-surface">Coordinate with Legal on data sovereignty requirements</p>
+<span class="text-[10px] text-on-surface-variant">Due Nov 02 • Compliance</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">more_vert</span>
+</div>
+</div>
+</div>
+<!-- 4. Visual Gallery -->
+<div class="col-span-5 bg-surface-container-low rounded-xl p-8 flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">collections</span>
+<h3 class="text-xs font-bold uppercase tracking-[0.2em] text-on-surface-variant">Visual Gallery</h3>
+</div>
+<span class="text-[10px] font-bold text-primary cursor-pointer hover:underline">View All (12)</span>
+</div>
+<div class="grid grid-cols-2 gap-4 flex-1">
+<div class="relative rounded-lg overflow-hidden group h-40">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="high-tech dashboard interface showing complex data analytics and colorful bar charts on a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCD4YLjLEWQyyFPHpqLh0PTrHkuPDVa9Mm2nqtqWeCsqvEs_q3xJdZ1ba_RsHTooT3O4Lvv_W0Qz1gjY-MVlHjn-PVEqgn8OEVpUI7x3_sRHWIlcHgidpqUTAX35K9YscjJn-0r2M7ucWO1WSa1HOghvnHvcR-By88fgd0ZeNvaIOU5LjWEFDNiJmV-t4Mo2OqOBymzJ1oJwdm78DT8fIzueP_ZTp3vGUnMxi68VZ_l7dsoVo8YWvYX9-M5UPa0NHHKNvbnTvGOvii"/>
+<div class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded text-[10px] text-white">12:14</div>
+</div>
+<div class="relative rounded-lg overflow-hidden group h-40">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="architectural system diagram showing cloud nodes and interconnected services on a dark digital canvas" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdzvj8PhdPcLCfTiHte9shL_8wsn_C5TG2HB7rMWEZxy9P8tCy_4R6KDbIEPc9U6ePUUcyxjCXUK6Cv8Xx5lHrM4xbXKkQpCCK2jVozVmUgg4bH1izQHEsqn_kW0lXsZSqJSmapgpsBxroeRpSRkjmMgO0dsiCpldivEuX1hmix7pxdTiXZWtVthQ71jlUV8k2viLKf2YLZYiwQ0kLA217MmtSHMl1IKARx7wC8n1cSnyqt7Q2j7elqxqV0CURokX0OBMpw5SbMeFv"/>
+<div class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded text-[10px] text-white">24:05</div>
+</div>
+<div class="relative rounded-lg overflow-hidden group h-40">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="web application wireframe with clean UI components and focus on user experience design displayed on a sleek monitor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAJHCHD5TfZoUq44r1XD5HpnlADVJLMsinkZVdF3jsc7ZGLa_fO47fxmzTbLsywQIbS-B1FTQzx9EfQGK3XVdN5TqgS5cYFZUD2t8-SJAF98G9ajFKpvNFSuRSaUGi-77YsEArBUsddwipkWzplTZVh3tEku6pii_S0B_8hK1EgO2SFr3nzqK26bYjmH2-ruisb-GxRcR1Ni1hD7-tZ9JZyKkKFXSeCFFORu5qNg6PO9oJ5gSkf7quGW_SXy1Vm8dHWX2jJa0IPwYc"/>
+<div class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded text-[10px] text-white">31:55</div>
+</div>
+<div class="relative rounded-lg overflow-hidden group h-40">
+<div class="w-full h-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-4xl">add</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

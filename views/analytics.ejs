@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#004c6e",
+                        "error": "#ffb4ab",
+                        "on-primary": "#1000a9",
+                        "surface-container": "#1d2026",
+                        "on-primary-container": "#d9d8ff",
+                        "inverse-on-surface": "#2e3037",
+                        "surface-bright": "#363940",
+                        "on-tertiary": "#00344d",
+                        "surface": "#10131a",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "secondary": "#44e2cd",
+                        "primary-container": "#4b4dd8",
+                        "surface-variant": "#32353c",
+                        "on-background": "#e1e2eb",
+                        "surface-container-low": "#191c22",
+                        "outline-variant": "#464555",
+                        "on-secondary-container": "#004d44",
+                        "on-error-container": "#ffdad6",
+                        "inverse-surface": "#e1e2eb",
+                        "primary": "#c0c1ff",
+                        "on-secondary-fixed": "#00201c",
+                        "on-secondary-fixed-variant": "#005047",
+                        "primary-fixed": "#e1e0ff",
+                        "on-surface": "#e1e2eb",
+                        "surface-container-high": "#272a31",
+                        "background": "#10131a",
+                        "tertiary-fixed-dim": "#89ceff",
+                        "on-tertiary-container": "#b8e0ff",
+                        "surface-container-lowest": "#0b0e14",
+                        "inverse-primary": "#494bd6",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "on-error": "#690005",
+                        "surface-dim": "#10131a",
+                        "outline": "#918fa1",
+                        "tertiary": "#89ceff",
+                        "on-surface-variant": "#c7c4d8",
+                        "error-container": "#93000a",
+                        "tertiary-container": "#006693",
+                        "on-secondary": "#003731",
+                        "secondary-container": "#03c6b2",
+                        "on-primary-fixed": "#07006c",
+                        "on-tertiary-fixed": "#001e2f",
+                        "surface-tint": "#c0c1ff",
+                        "secondary-fixed-dim": "#3cddc7",
+                        "secondary-fixed": "#62fae3",
+                        "tertiary-fixed": "#c9e6ff",
+                        "surface-container-highest": "#32353c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-sidebar {
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+        .glow-accent {
+            box-shadow: 0 0 15px rgba(68, 226, 205, 0.2);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #464555;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary/30">
+<!-- SideNavBar Anchor -->
+<nav class="fixed left-0 top-0 h-full w-64 z-50 flex flex-col h-full p-4 gap-y-6 bg-[#191c22]/80 backdrop-blur-2xl shadow-[20px_0_40px_rgba(0,0,0,0.4)] border-none">
+<div class="flex flex-col gap-1 px-2">
+<h1 class="text-lg font-bold tracking-tighter text-[#e1e2eb]">Silent Architect</h1>
+<p class="text-xs text-primary-fixed-dim/60 font-medium tracking-tight">AI Intelligence Active</p>
+</div>
+<div class="mt-4 flex flex-col gap-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-[#c7c4d8] hover:text-[#e1e2eb] hover:bg-[#272a31]/50 transition-all duration-300 ease-in-out font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#c7c4d8] hover:text-[#e1e2eb] hover:bg-[#272a31]/50 transition-all duration-300 ease-in-out font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="podcasts">podcasts</span>
+                Live Companion
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#c7c4d8] hover:text-[#e1e2eb] hover:bg-[#272a31]/50 transition-all duration-300 ease-in-out font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="summarize">summarize</span>
+                Meeting Debriefs
+            </a>
+<!-- Active State Navigation -->
+<a class="flex items-center gap-3 px-3 py-2 bg-[#272a31] text-[#c0c1ff] font-semibold rounded-md font-['Inter'] tracking-tight text-sm" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+                Analytics
+            </a>
+</div>
+<button class="mt-4 mx-2 py-2.5 px-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary text-sm font-bold shadow-lg shadow-primary/10 active:scale-95 transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="auto_awesome">auto_awesome</span>
+            Capture Insight
+        </button>
+<div class="mt-auto flex flex-col gap-y-1 border-t border-outline-variant/10 pt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-[#c7c4d8] hover:text-[#e1e2eb] hover:bg-[#272a31]/50 transition-all duration-300 ease-in-out font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="extension">extension</span>
+                Integrations
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-[#c7c4d8] hover:text-[#e1e2eb] hover:bg-[#272a31]/50 transition-all duration-300 ease-in-out font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="settings">settings</span>
+                Settings
+            </a>
+<div class="flex items-center gap-3 px-2 mt-4 pt-4 border-t border-outline-variant/10">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-highest">
+<img alt="Executive User Profile" class="w-full h-full object-cover" data-alt="close-up portrait of a professional business executive in a modern office with soft cinematic lighting and blurred background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApfvd07I64f-cuah5D0vsMy3KZmdrHLk3VJt0h4hGLvHeI8Bz-TdaLwIf0Vda9eUXFIKDbOmn57qnKSX3tRUzhXZe_R59hwBcyZmzlQQCs1zBG9bUN15QUOYJ8T_KNLMRLAUk-_FWjlIs1TPOrs7CqvyqHW8onaNhc0TPJS0V_Y-RjMujlaXLqZCatPw359t0-8ERR1nl1kelO5aML9B0VUHh-aPwTcX8qAhr-U8Xj91Gd2OSNT_iUVFzHqK7DDNtSRoW2vR_ki77W"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-on-surface">Alex Chen</span>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-widest">Director</span>
+</div>
+</div>
+</div>
+</nav>
+<!-- TopAppBar Anchor -->
+<header class="sticky top-0 w-full z-40 bg-[#10131a]/90 backdrop-blur-md flex justify-between items-center px-8 py-3 ml-64 max-w-[calc(100%-16rem)] border-none">
+<div class="flex items-center gap-8">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="bg-surface-container-lowest text-on-surface text-sm pl-10 pr-4 py-1.5 rounded-full border-none focus:ring-1 focus:ring-secondary/40 w-64 transition-all duration-300" placeholder="Search analytics..." type="text"/>
+</div>
+<nav class="flex gap-6">
+<a class="text-[#c7c4d8] hover:text-[#e1e2eb] transition-colors text-[0.875rem] font-medium leading-relaxed" href="#">Recent</a>
+<a class="text-[#c7c4d8] hover:text-[#e1e2eb] transition-colors text-[0.875rem] font-medium leading-relaxed" href="#">Pinned</a>
+<a class="text-[#c7c4d8] hover:text-[#e1e2eb] transition-colors text-[0.875rem] font-medium leading-relaxed" href="#">Blocked</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1.5 bg-surface-container-low px-3 py-1.5 rounded-md text-[0.75rem] font-bold uppercase tracking-wider text-secondary">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+</span>
+                Live Status
+            </div>
+<div class="h-6 w-[1px] bg-outline-variant/20 mx-1"></div>
+<button class="p-2 text-on-surface-variant hover:bg-[#191c22] rounded-md transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="bg-primary/10 hover:bg-primary/20 text-primary px-4 py-1.5 rounded-md text-sm font-bold transition-all cubic-bezier(0.4,0,0.2,1)">
+                Record Meeting
+            </button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 p-8 min-h-screen">
+<!-- Dashboard Header -->
+<div class="mb-10">
+<h2 class="text-[2.75rem] font-bold tracking-tight text-on-surface mb-2 leading-none">Meeting Debt <span class="text-primary-fixed-dim italic">Analysis</span></h2>
+<p class="text-on-surface-variant text-lg max-w-2xl">Visualizing unresolved friction and recurring discussions across your organization's decision pipeline.</p>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-6 auto-rows-[220px]">
+<!-- High-Level Debt Metric Card -->
+<div class="col-span-4 row-span-1 bg-surface-container-low rounded-xl p-6 flex flex-col justify-between group overflow-hidden relative">
+<div class="absolute -right-4 -top-4 w-32 h-32 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors duration-500"></div>
+<div>
+<span class="text-[0.75rem] font-bold text-on-surface-variant uppercase tracking-widest">Total Meeting Debt</span>
+<div class="text-5xl font-black text-on-surface mt-2 tracking-tighter">124<span class="text-xl text-primary ml-1">hrs</span></div>
+</div>
+<div class="flex items-center gap-2 text-secondary text-sm font-medium">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span>+12% from last sprint</span>
+</div>
+</div>
+<!-- Recurring Topic Metric -->
+<div class="col-span-4 row-span-1 bg-surface-container-low rounded-xl p-6 flex flex-col justify-between overflow-hidden relative">
+<div>
+<span class="text-[0.75rem] font-bold text-on-surface-variant uppercase tracking-widest">Recurring Subjects</span>
+<div class="text-5xl font-black text-on-surface mt-2 tracking-tighter">18</div>
+</div>
+<div class="text-on-surface-variant text-sm">
+                    Topics discussed <span class="text-error font-bold">3+</span> times without resolution.
+                </div>
+</div>
+<!-- AI Insight Mini Card -->
+<div class="col-span-4 row-span-1 bg-gradient-to-br from-primary/10 to-primary-container/10 border border-primary/5 rounded-xl p-6 flex flex-col gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="auto_awesome">auto_awesome</span>
+<span class="text-[0.75rem] font-bold text-primary uppercase tracking-widest">AI Intelligence</span>
+</div>
+<p class="text-on-surface text-sm leading-relaxed">
+                    "Project <span class="text-primary font-bold">Lumina</span> has stalled in the 'Definition' phase. 4 recurring meetings found without clear action owners."
+                </p>
+<button class="mt-auto text-xs font-bold text-primary underline underline-offset-4 decoration-primary/30 hover:decoration-primary">Optimize Workflow</button>
+</div>
+<!-- Blocker Heatmap (Data Vis Area) -->
+<div class="col-span-8 row-span-2 bg-surface-container-low rounded-xl p-8 flex flex-col">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-xl font-bold text-on-surface">Blocker Heatmap</h3>
+<p class="text-sm text-on-surface-variant">Density of unresolved follow-ups by department and project priority.</p>
+</div>
+<div class="flex gap-2 bg-surface-container-lowest p-1 rounded-lg">
+<button class="px-3 py-1 text-xs font-bold bg-surface-container-high text-on-surface rounded-md">Week</button>
+<button class="px-3 py-1 text-xs font-bold text-on-surface-variant hover:text-on-surface transition-colors">Month</button>
+</div>
+</div>
+<div class="flex-grow grid grid-cols-5 grid-rows-4 gap-2">
+<!-- Fake Heatmap Grid -->
+<div class="bg-surface-container-high rounded-sm opacity-20"></div>
+<div class="bg-error/20 rounded-sm"></div>
+<div class="bg-error/40 rounded-sm"></div>
+<div class="bg-error/10 rounded-sm"></div>
+<div class="bg-surface-container-high rounded-sm opacity-20"></div>
+<div class="bg-secondary/10 rounded-sm"></div>
+<div class="bg-secondary/30 rounded-sm"></div>
+<div class="bg-error/60 rounded-sm relative group cursor-help">
+<div class="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-surface-bright p-3 rounded-xl shadow-2xl z-50 backdrop-blur-md">
+<p class="text-xs font-bold text-on-surface mb-1">Product Design</p>
+<p class="text-[10px] text-on-surface-variant">14 Blockers detected. Avg age: 5.2 days.</p>
+</div>
+</div>
+<div class="bg-secondary/10 rounded-sm"></div>
+<div class="bg-surface-container-high rounded-sm opacity-20"></div>
+<div class="bg-surface-container-high rounded-sm opacity-20"></div>
+<div class="bg-error/20 rounded-sm"></div>
+<div class="bg-error/10 rounded-sm"></div>
+<div class="bg-secondary/20 rounded-sm"></div>
+<div class="bg-secondary/40 rounded-sm"></div>
+<div class="bg-surface-container-high rounded-sm opacity-20"></div>
+<div class="bg-surface-container-high rounded-sm opacity-20"></div>
+<div class="bg-error/30 rounded-sm"></div>
+<div class="bg-error/20 rounded-sm"></div>
+<div class="bg-surface-container-high rounded-sm opacity-20"></div>
+</div>
+<div class="mt-6 flex justify-between items-center text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2"><span class="w-3 h-3 bg-secondary/40 rounded-sm"></span> Low Friction</div>
+<div class="flex items-center gap-2"><span class="w-3 h-3 bg-error/60 rounded-sm"></span> Critical Debt</div>
+</div>
+<div>Source: Decision Engine V2.4</div>
+</div>
+</div>
+<!-- Decision Lag Trend -->
+<div class="col-span-4 row-span-2 bg-surface-container rounded-xl p-6 border border-outline-variant/5">
+<h3 class="text-lg font-bold text-on-surface mb-4">Lag Time Trends</h3>
+<div class="h-48 flex items-end justify-between gap-2 px-2">
+<div class="w-full bg-surface-container-highest rounded-t-lg h-[40%]"></div>
+<div class="w-full bg-surface-container-highest rounded-t-lg h-[65%]"></div>
+<div class="w-full bg-primary/40 rounded-t-lg h-[85%] group relative">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] font-black px-2 py-1 rounded">4.2d</div>
+</div>
+<div class="w-full bg-surface-container-highest rounded-t-lg h-[55%]"></div>
+<div class="w-full bg-surface-container-highest rounded-t-lg h-[45%]"></div>
+<div class="w-full bg-surface-container-highest rounded-t-lg h-[70%]"></div>
+</div>
+<div class="mt-6 space-y-4">
+<div class="flex justify-between items-center text-xs">
+<span class="text-on-surface-variant">Avg. Response Time</span>
+<span class="font-bold">2.4 Days</span>
+</div>
+<div class="w-full h-1 bg-surface-container-lowest rounded-full">
+<div class="w-3/4 h-full bg-primary rounded-full"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant italic">Efficiency is down 4% compared to Q3 benchmark.</p>
+</div>
+</div>
+<!-- Debt Log Table Area -->
+<div class="col-span-12 row-span-3 bg-surface-container-low rounded-xl p-8">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-2xl font-black tracking-tight text-on-surface uppercase">Unresolved Debt Log</h3>
+<p class="text-sm text-on-surface-variant mt-1">High-frequency topics missing 'Decision' or 'Resolution' markers.</p>
+</div>
+<button class="bg-surface-container-high px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 border border-outline-variant/10 hover:border-primary/40 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                        Filter by Iteration
+                    </button>
+</div>
+<div class="space-y-4 overflow-y-auto max-h-[500px] custom-scrollbar pr-4">
+<!-- Debt Log Item 1 -->
+<div class="bg-surface-container p-5 rounded-xl border-l-4 border-error hover:bg-surface-container-high transition-all duration-300">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3">
+<h4 class="text-lg font-bold text-on-surface">API Authentication Refactor</h4>
+<span class="bg-error-container text-on-error-container text-[10px] px-2 py-0.5 rounded font-black uppercase tracking-tighter">High Debt</span>
+</div>
+<p class="text-on-surface-variant text-sm">Discussions regarding OAuth2 vs proprietary tokens.</p>
+</div>
+<div class="flex flex-col items-end">
+<div class="text-2xl font-black text-error">7x</div>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">Mentions</span>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-6">
+<div class="flex -space-x-2">
+<img alt="User" class="w-6 h-6 rounded-full border-2 border-surface" data-alt="professional portrait of developer with glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOGwR8uKST3McL55T3ZGKbKHGO7n1n_pAC7gsfv-WN93Gt5SR-MwSJeEMTUwKrGLS8o7ZkBA6YQL3Rzn_mOFfm5SRItdwQnIlgqTJQiYVd1X0R49GhNU4IoE_S7Xmj_Sm9sqg4mqvQ9DbtkADkwntcCXIXnlUyU-GrPrbQ95rBQXU9yZDF_YMWIKaNDMyUEayZ8PMLqRDuJdsnvA64y3FKQnIs_8t--Pt8uF0YYD-QDl4iAvJFIvuVB8otMYifpx3351qnjCK19EvL"/>
+<img alt="User" class="w-6 h-6 rounded-full border-2 border-surface" data-alt="professional portrait of project manager" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAo9TiBkTSDOmv7oN4g5y1TcRtVFqLnNHGSlB-Xr9BFsPJdIdezbpITVk-RpKiEepxFqOukqKhAH_7Lr2sjrXP-pS-vzB_lILc7hMIX0rRSdtae_RETpZG19yo51DPZDPS3N0mZpO2IVLLRw8O8RBFUY4286JKpAMgOXvOx7uQfkCR7R_AsfnI17YGZR1_02U4H0LX3rUexcy7_barix0bPY46sxrc2AAbTlyaBLLF2xXjP2ChwsCApQSxOagLDPVOXAVGZeISy-6-l"/>
+<div class="w-6 h-6 rounded-full bg-surface-container-highest border-2 border-surface flex items-center justify-center text-[8px] font-bold">+4</div>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                                Last discussed: 4 hours ago
+                            </div>
+<button class="ml-auto flex items-center gap-2 text-xs font-bold text-secondary">
+<span class="material-symbols-outlined text-sm" data-icon="gavel">gavel</span>
+                                Force Resolution
+                            </button>
+</div>
+</div>
+<!-- Debt Log Item 2 -->
+<div class="bg-surface-container p-5 rounded-xl border-l-4 border-primary hover:bg-surface-container-high transition-all duration-300">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3">
+<h4 class="text-lg font-bold text-on-surface">Marketing Q4 Budget Cap</h4>
+<span class="bg-primary-container text-on-primary-container text-[10px] px-2 py-0.5 rounded font-black uppercase tracking-tighter">Medium Debt</span>
+</div>
+<p class="text-on-surface-variant text-sm">Budget allocation for performance marketing vs brand awareness.</p>
+</div>
+<div class="flex flex-col items-end">
+<div class="text-2xl font-black text-primary">5x</div>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">Mentions</span>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-6">
+<div class="flex -space-x-2">
+<img alt="User" class="w-6 h-6 rounded-full border-2 border-surface" data-alt="professional portrait of marketing lead" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiP3g5OQ7GmO0m9w1CDRRAj5mCnT2MEmPhGAfeQ5TJQhNp4WAFTvoX7EnqIByS8dzoTeXVLZ3dmaGicjI1-qpZMbQm56Tj2oGaNNJ5kM0wmoPmbKsq0pFCloM6h0LJuX18bMAXcaywF4Yg-9Vp-30BNELg5TpJf-2H-7Lhi1K9s9DctkezuFj6KwiULVsgvLwcJ1wtIwLhCzEE-ZGvIPRerF-t232XPXUqJHhqdVQFlftDCy0dP3LXvuSA0AjANxrW6tKgmtvGYVsS"/>
+<img alt="User" class="w-6 h-6 rounded-full border-2 border-surface" data-alt="professional portrait of finance head" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxvI-0YZSDQ95UCI_wSUcIQxkA7qx1lh9LcCWzfsqK2N_GbxvcawCbxW1KQhm39JE1BiwW5Cnuap8rPtHXIXDqKRfDV9OPzzeIhtp9byDYUJSOU-u8RtFXAeNK6qGZZx5vpNUthBXu86l8yRkmoLK-PAUb3foFqQVlFtyVSQWaRC769CraAzICubDDMnfxV2njDCALzQuVCFGPY-FbdOGQxJl1dyuzmVsv3iaIEi_EHbzwf463OCEzqjFEyDoXEyj-qL488kVE6uvM"/>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                                Last discussed: Yesterday
+                            </div>
+<button class="ml-auto flex items-center gap-2 text-xs font-bold text-secondary">
+<span class="material-symbols-outlined text-sm" data-icon="gavel">gavel</span>
+                                Force Resolution
+                            </button>
+</div>
+</div>
+<!-- Debt Log Item 3 -->
+<div class="bg-surface-container p-5 rounded-xl border-l-4 border-on-surface-variant hover:bg-surface-container-high transition-all duration-300">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3">
+<h4 class="text-lg font-bold text-on-surface">Naming Convention for V3</h4>
+<span class="bg-surface-container-highest text-on-surface-variant text-[10px] px-2 py-0.5 rounded font-black uppercase tracking-tighter">Low Debt</span>
+</div>
+<p class="text-on-surface-variant text-sm">Internal naming for the next major release modules.</p>
+</div>
+<div class="flex flex-col items-end">
+<div class="text-2xl font-black text-on-surface-variant">3x</div>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">Mentions</span>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-6">
+<div class="flex -space-x-2">
+<img alt="User" class="w-6 h-6 rounded-full border-2 border-surface" data-alt="professional portrait of creative director" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuPo5EP4snck3SYIhxTHp16-psB_wqgzIZ8-tWLL5HrITlym3QonDbHcaJLv1IOcTTOAx9GZeQ7I7A5zYIQ9vXlDAG67GG00qKuoT_ukgiU2cX4YRJ4hRFMdMT3h5NxztFpuiZlQ0g7pz8m7BGhJih8agylL4-SywBAmWHpwg2NUjprH9VPsKQu60vJVjadVI4Q-aIAGfC-TJMa9nmzGj4e0SeeMxnke5zFLxSCsj588Kqox_JdvSJbhVQs8PiDN2IgvhnRa_5c9yk"/>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                                Last discussed: 2 days ago
+                            </div>
+<button class="ml-auto flex items-center gap-2 text-xs font-bold text-secondary">
+<span class="material-symbols-outlined text-sm" data-icon="gavel">gavel</span>
+                                Force Resolution
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Intelligence Insight -->
+<footer class="mt-12 py-10 px-8 bg-surface-container-low rounded-t-3xl border-t border-outline-variant/10 flex items-center justify-between">
+<div class="flex items-center gap-6">
+<div class="w-16 h-16 bg-primary/20 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl text-primary" data-icon="psychology">psychology</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-on-surface">Intelligence Recommendation</h4>
+<p class="text-sm text-on-surface-variant max-w-md">Consolidate the 'API Refactor' discussion into a dedicated sync with CTO on Monday at 9AM. Probable outcome: 92% resolution confidence.</p>
+</div>
+</div>
+<button class="px-8 py-3 bg-secondary text-on-secondary font-black rounded-xl uppercase tracking-tighter shadow-lg shadow-secondary/10 active:scale-95 transition-transform">
+                Schedule Sync
+            </button>
+</footer>
+</main>
+</body></html>
