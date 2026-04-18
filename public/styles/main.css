@@ -1,0 +1,73 @@
+/* PAGE CONTAINER */
+.working-page {
+  min-height: calc(100vh - 70px);
+}
+
+/* GRID SPACING FIX */
+.working-page .row {
+  margin-top: 20px;
+}
+
+/* STEP CARD (MAIN BOX) */
+.step-card {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 14px;
+
+  /* boundary */
+    border: 1.5px solid #d1d5db;
+
+  /* subtle depth */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+
+  /* smooth interaction */
+  transition: all 0.25s ease;
+  height: 100%;
+}
+
+/* HOVER EFFECT (important for premium feel) */
+.step-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  border-color: #d1d5db;
+}
+
+/* STEP NUMBER */
+.step-number {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2563eb;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+/* HEADINGS */
+.step-card h5 {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* TEXT */
+.step-card p {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+/* OPTIONAL: ADD DIVIDER LINE INSIDE */
+.step-card::before {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: #2563eb;
+  border-radius: 2px;
+  margin-bottom: 12px;
+}
+
+/* RESPONSIVE IMPROVEMENT */
+@media (max-width: 768px) {
+  .step-card {
+    padding: 20px;
+  }
+}
