@@ -1,7 +1,10 @@
 import axios from "axios";
 import crypto from "crypto";
+import dotenv from "dotenv" ;
 import getAccessToken from "../services/zoomAuth.js";
 import { processRecording } from "../services/processingService.js";
+
+dotenv.config() ;
 
 /**
  * 🔹 Test Zoom Token
@@ -42,10 +45,7 @@ export async function getUsers(req, res) {
 export async function getRecordings(req, res) {
   try {
     const token = await getAccessToken();
-
-    // 🔥 IMPORTANT: Replace this with your actual userId
-    const userId = "FEvda4lVQzmZ9ITVH-Stuw";
-
+    const userId = process.env.USER_ID;
     const response = await axios.get(
       `https://api.zoom.us/v2/users/${userId}/recordings`,
       {
@@ -54,49 +54,33 @@ export async function getRecordings(req, res) {
         },
       }
     );
-
     res.json(response.data);
   } catch (err) {
     console.error("Recordings Error:", err.response?.data || err.message);
     res.status(500).send(err.response?.data || "Error fetching recordings");
   }
 }
-
-/**
- * 🔔 Zoom Webhook Handler
- */
 export async function zoomWebhook(req, res) {
   const { event, payload } = req.body;
-
-  /**
-   * 🔐 URL Validation (MANDATORY)
-   */
   if (event === "endpoint.url_validation") {
     const plainToken = payload.plainToken;
-
     const encryptedToken = crypto
       .createHmac("sha256", process.env.ZOOM_WEBHOOK_SECRET)
       .update(plainToken)
       .digest("hex");
-
     return res.json({
       plainToken,
       encryptedToken,
     });
   }
-
-  console.log("🔔 Zoom Event Received:", event);
-
-  /**
-   * 🎯 Recording Completed Event
-   */
+  console.log("Zoom Event Received:", event);
   if (event === "recording.completed") {
     try {
       const files = payload.object.recording_files;
 
       for (let file of files) {
         if (file.download_url) {
-          console.log("📥 Downloading:", file.download_url);
+          console.log("Downloading:", file.download_url);
           await processRecording(file.download_url);
         }
       }
