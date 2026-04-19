@@ -346,59 +346,34 @@ h1, h2, h3, h4, h5, h6 {
    ========================================================================== */
 
 /* Graphic Hub styling - Made overall smaller and tighter */
-.integration-hub {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  max-width: 400px; /* Reduced to make it smaller */
-}
-
-.hub-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 38%;
-  height: 38%;
-  background: var(--bg-light);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* Outer gray ring effect */
-  box-shadow: 0 0 0 16px rgba(241, 245, 249, 0.6), 0 8px 20px rgba(0, 0, 0, 0.05);
-  z-index: 2;
-}
-
-.hub-node {
-  position: absolute;
-  border-radius: 50px;
-  padding: 10px 18px; /* Slightly smaller padding */
+/* --- Flowchart Diagram Styles --- */
+.diagram-box {
+  padding: 10px 20px;
+  border-radius: 8px;
   font-weight: 600;
-  font-size: 13px; /* Slightly smaller text */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
-  display: flex;
+  font-size: 14px;
   align-items: center;
-  gap: 6px;
-  z-index: 3;
-  white-space: nowrap;
+  gap: 8px;
 }
 
-/* 5 Node Precise Positioning */
-.node-1 { top: 0%; left: 50%; transform: translateX(-50%); padding: 12px 24px; font-size: 14px; } 
-.node-2 { top: 30%; right: -5%; } 
-.node-3 { bottom: 15%; right: 5%; } 
-.node-4 { bottom: 15%; left: 5%; } 
-.node-5 { top: 30%; left: -5%; } 
-
-/* Make graphic scale well on mobile devices */
-@media (max-width: 576px) {
-  .integration-hub { max-width: 300px; }
-  .hub-node { padding: 6px 12px; font-size: 11px; }
-  .node-1 { padding: 8px 16px; font-size: 12px; }
-  .hub-center { width: 45%; height: 45%; box-shadow: 0 0 0 10px rgba(241, 245, 249, 0.6); }
+.node-blue {
+  background-color: #0d6efd;
+  color: white;
+  border: 1px solid #0d6efd;
 }
 
+.node-dark {
+  background-color: #212529;
+  color: white;
+  border: 1px solid #212529;
+}
+
+.node-light {
+  background-color: white;
+  color: #333333;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
 /* ==========================================================================
    UPLOAD DROPZONE STYLES
    ========================================================================== */
@@ -459,4 +434,122 @@ h1, h2, h3, h4, h5, h6 {
 .upload-dropdown-menu .dropdown-item.disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* ==========================================================================
+   HOW IT WORKS (Upload Orbit Graphic)
+   ========================================================================== */
+
+.integration-hub {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 420px; 
+}
+
+.hub-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  height: 40%;
+  background: var(--bg-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Outer gray ring effect */
+  box-shadow: 0 0 0 20px rgba(241, 245, 249, 0.6), 0 8px 20px rgba(0, 0, 0, 0.05);
+  z-index: 2;
+}
+
+.hub-node {
+  position: absolute;
+  border-radius: 50px;
+  padding: 10px 20px; 
+  font-weight: 600;
+  font-size: 14px; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 3;
+  white-space: nowrap;
+}
+
+/* Precise Circular Positioning for 5 Nodes */
+.node-1 { top: 15%; right: 0%; } 
+.node-2 { bottom: 30%; right: -5%; } 
+.node-3 { bottom: 5%; left: 50%; transform: translateX(-50%); } 
+.node-4 { bottom: 30%; left: -10%; padding: 12px 24px; font-size: 15px;} 
+.node-5 { top: 0%; left: 50%; transform: translateX(-50%); padding: 12px 24px; font-size: 15px;} 
+
+/* Responsive adjustments for mobile */
+@media (max-width: 576px) {
+  .integration-hub { max-width: 300px; margin-top: 2rem; }
+  .hub-node { padding: 6px 14px; font-size: 12px; }
+  .node-4, .node-5 { padding: 8px 16px; font-size: 13px; }
+  .hub-center { width: 45%; height: 45%; box-shadow: 0 0 0 12px rgba(241, 245, 249, 0.6); }
+  
+  /* Pull the edges in slightly on very small screens */
+  .node-1 { right: 5%; }
+  .node-2 { right: 0%; }
+  .node-4 { left: 0%; }
+}
+
+/* ==========================================================================
+   DASHBOARD / MEETING VIEW STYLES
+   ========================================================================== */
+
+/* Custom Tabs Styling */
+.nav-tabs {
+  border-bottom: 2px solid var(--border-light);
+}
+
+.nav-tabs .nav-link {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-bottom: 3px solid transparent;
+  padding-bottom: 12px;
+  transition: all 0.2s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--primary);
+  border-color: transparent;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--primary) !important;
+  background: transparent;
+  border-bottom: 3px solid var(--primary);
+}
+
+/* Sidebar List Group */
+.list-group-item {
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  transition: background-color 0.2s ease;
+}
+
+.list-group-item:hover {
+  background-color: var(--bg-light);
+}
+
+/* Transcript Entry Styling */
+.transcript-entry {
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.transcript-entry:hover {
+  background-color: #f8fafc;
+}
+
+.speaker-avatar {
+  font-size: 1.2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
