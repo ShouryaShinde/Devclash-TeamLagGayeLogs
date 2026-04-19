@@ -1,4 +1,186 @@
 <%- include("partials/header") %>
+  
+    <div class="container-fluid bg-light" style="min-height: calc(100vh - 70px);">
+      <div class="row h-100">
+  
+        <div class="col-lg-3 col-xl-2 border-end bg-white p-0 d-none d-lg-block" style="min-height: calc(100vh - 70px);">
+          <div class="p-4 border-bottom">
+            <h6 class="text-uppercase fw-bold text-muted mb-0" style="font-size: 0.75rem; letter-spacing: 1px;">Your
+              Library</h6>
+          </div>
+          <div class="list-group list-group-flush">
+            <a href="#"
+              class="list-group-item list-group-item-action bg-primary bg-opacity-10 border-start border-4 border-primary py-3">
+              <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                <h6 class="mb-0 fw-bold text-dark text-truncate">Q3 Product Roadm...</h6>
+                <span class="badge bg-danger rounded-pill" style="font-size: 0.6rem;">LIVE</span>
+              </div>
+              <small class="text-muted">Today, 10:30 AM</small>
+            </a>
+  
+            <a href="#" class="list-group-item list-group-item-action py-3">
+              <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                <h6 class="mb-0 fw-semibold text-dark text-truncate">Client Kickoff Call</h6>
+                <span class="badge bg-secondary rounded-pill" style="font-size: 0.6rem;">UPLOAD</span>
+              </div>
+              <small class="text-muted">Yesterday, 2:15 PM</small>
+            </a>
+          </div>
+        </div>
+  
+        <div class="col-lg-9 col-xl-10 p-4 p-lg-5">
+  
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+            <div>
+              <span
+                class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-1 mb-2 fw-semibold border border-danger border-opacity-25">
+                <i class="bi bi-record-circle me-1"></i> Live Meeting Source
+              </span>
+              <h2 class="fw-bold text-dark mb-1">Q3 Product Roadmap Planning</h2>
+              <p class="text-muted mb-0"><i class="bi bi-calendar3 me-2"></i> Oct 24, 2026 • 45m 12s duration • 3
+                Participants</p>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-secondary rounded-pill px-4 fw-semibold"><i
+                  class="bi bi-share me-2"></i>Share</button>
+              <button class="btn btn-primary rounded-pill px-4 fw-semibold"><i
+                  class="bi bi-download me-2"></i>Export</button>
+            </div>
+          </div>
+  
+          <ul class="nav nav-tabs mb-4 border-bottom" id="meetingTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active fw-bold px-4 py-3 text-dark" id="summary-tab" data-bs-toggle="tab"
+                data-bs-target="#summary" type="button" role="tab">Overview & Insights</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link fw-bold px-4 py-3 text-muted" id="transcript-tab" data-bs-toggle="tab"
+                data-bs-target="#transcript" type="button" role="tab">Full Transcript</button>
+            </li>
+          </ul>
+  
+          <div class="tab-content" id="meetingTabsContent">
+  
+            <div class="tab-pane fade show active" id="summary" role="tabpanel">
+              <div class="row g-4">
+  
+                <div class="col-xl-8">
+                  <div class="bg-white border rounded-4 p-4 shadow-sm mb-4">
+                    <h5 class="fw-bold mb-3 d-flex align-items-center gap-2"><i class="bi bi-card-text text-primary"></i>
+                      Executive Summary</h5>
+                    <p class="text-muted">The team discussed the upcoming Q3 product features, prioritizing the new
+                      dashboard redesign and payment gateway integration. Marketing raised concerns about the timeline,
+                      but engineering confirmed resources are available to meet the current launch date if the staging
+                      environment is approved by Friday.</p>
+                  </div>
+  
+                  <div class="bg-white border rounded-4 p-4 shadow-sm">
+                    <h5 class="fw-bold mb-3 d-flex align-items-center gap-2"><i class="bi bi-lightbulb text-warning"></i>
+                      Key Decisions</h5>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item px-0 text-dark"><i class="bi bi-check-circle-fill text-success me-2"></i>
+                        The Dashboard Redesign will launch before the Payment Gateway.</li>
+                      <li class="list-group-item px-0 text-dark"><i class="bi bi-check-circle-fill text-success me-2"></i>
+                        Staging environment will be frozen on Friday at 5 PM.</li>
+                      <li class="list-group-item px-0 text-dark border-bottom-0"><i
+                          class="bi bi-check-circle-fill text-success me-2"></i> Marketing budget increased by 15% for the
+                        launch campaign.</li>
+                    </ul>
+                  </div>
+                </div>
+  
+                <div class="col-xl-4">
+                  <div class="bg-white border rounded-4 p-4 shadow-sm h-100">
+                    <h5 class="fw-bold mb-4 d-flex align-items-center gap-2"><i
+                        class="bi bi-calendar-check text-primary"></i> Deadlines & Action Items</h5>
+  
+                    <div class="d-flex align-items-start gap-3 mb-3 pb-3 border-bottom">
+                      <input class="form-check-input mt-1 border-secondary" type="checkbox"
+                        style="width: 1.25rem; height: 1.25rem;">
+                      <div>
+                        <p class="mb-1 fw-semibold text-dark">Approve staging environment</p>
+                        <div class="d-flex gap-2 align-items-center">
+                          <span class="badge bg-light text-dark border"><i class="bi bi-person me-1"></i> Sarah</span>
+                          <span class="text-danger small fw-bold"><i class="bi bi-clock me-1"></i> Friday, 5:00 PM</span>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div class="d-flex align-items-start gap-3 mb-3 pb-3 border-bottom">
+                      <input class="form-check-input mt-1 border-secondary" type="checkbox"
+                        style="width: 1.25rem; height: 1.25rem;">
+                      <div>
+                        <p class="mb-1 fw-semibold text-dark">Finalize marketing copy</p>
+                        <div class="d-flex gap-2 align-items-center">
+                          <span class="badge bg-light text-dark border"><i class="bi bi-person me-1"></i> Alex</span>
+                          <span class="text-warning small fw-bold"><i class="bi bi-clock me-1"></i> Next Tuesday</span>
+                        </div>
+                      </div>
+                    </div>
+  
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="tab-pane fade" id="transcript" role="tabpanel">
+              <div class="bg-white border rounded-4 shadow-sm p-4">
+  
+                <div class="transcript-entry d-flex gap-3 mb-4">
+                  <div
+                    class="speaker-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0"
+                    style="width: 45px; height: 45px;">S</div>
+                  <div>
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                      <h6 class="fw-bold mb-0 text-dark">Sarah (Product)</h6>
+                      <span class="text-muted small">10:02 AM</span>
+                    </div>
+                    <p class="text-muted mb-0">Alright everyone, let's get started. First item on the agenda is the
+                      dashboard redesign. Engineering, do we have a timeline for when the staging environment will be
+                      ready for review?</p>
+                  </div>
+                </div>
+  
+                <div class="transcript-entry d-flex gap-3 mb-4">
+                  <div
+                    class="speaker-avatar text-white rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0"
+                    style="width: 45px; height: 45px; background-color: #10b981;">A</div>
+                  <div>
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                      <h6 class="fw-bold mb-0 text-dark">Alex (Engineering)</h6>
+                      <span class="text-muted small">10:04 AM</span>
+                    </div>
+                    <p class="text-muted mb-0">Yes, the core components are built. We just need to wire up the new API
+                      endpoints. I can confidently say we will have the staging environment frozen and ready for your
+                      approval by Friday at 5:00 PM.</p>
+                  </div>
+                </div>
+  
+                <div class="transcript-entry d-flex gap-3 mb-4">
+                  <div
+                    class="speaker-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0"
+                    style="width: 45px; height: 45px;">S</div>
+                  <div>
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                      <h6 class="fw-bold mb-0 text-dark">Sarah (Product)</h6>
+                      <span class="text-muted small">10:05 AM</span>
+                      <span
+                        class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 ms-2 rounded-pill"
+                        style="font-size: 0.65rem;">ACTION ITEM DETECTED</span>
+                    </div>
+                    <p class="text-muted mb-0">Perfect. I'll block out an hour on Friday evening to approve the staging
+                      environment so we can push to production over the weekend. What about the marketing copy?</p>
+                  </div>
+                </div>
+  
+              </div>
+            </div>
+  
+          </div>
+  
+        </div>
+      </div>
+    </div>
 
 
 <%- include("partials/footer") %>

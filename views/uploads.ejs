@@ -4,63 +4,148 @@
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
 
-                <div class="upload-dropzone text-center p-5 rounded-4">
-                    <div class="mb-4">
-                        <div class="upload-icon-wrapper mx-auto mb-3">
-                            <i class="bi bi-cloud-arrow-up-fill text-primary"></i>
-                        </div>
-                        <h4 class="fw-bold mb-1">Upload your files</h4>
-                        <p class="text-muted small">Drag and drop your files here, or click to browse.</p>
-                    </div>
+                <form action="/upload-process" method="POST" enctype="multipart/form-data" id="uploadForm">
+                    <div class="upload-dropzone text-center p-5 rounded-4" id="dropArea">
 
-                    <div class="btn-group shadow-sm">
-                        <label class="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 m-0 cursor-pointer">
-                            <i class="bi bi-file-earmark-plus"></i> Choose Files
-                            <input type="file" multiple class="d-none">
-                        </label>
+                        <div id="uploadUI">
+                            <div class="mb-4">
+                                <div class="upload-icon-wrapper mx-auto mb-3">
+                                    <i class="bi bi-cloud-arrow-up-fill text-primary"></i>
+                                </div>
+                                <h4 class="fw-bold mb-1">Upload your files</h4>
+                                <p class="text-muted small">Drag and drop your files here, or click to browse.</p>
+                            </div>
 
-                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split px-3"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="visually-hidden">Toggle Dropdown</span>
-                        </button>
-
-                        <ul class="upload-dropdown-menu dropdown-menu shadow-lg border-0 mt-2 rounded-3">
-                            <li>
-                                <label class="dropdown-item d-flex align-items-center gap-3 py-2 cursor-pointer">
-                                    <i class="bi bi-laptop text-primary"></i> From Device
-                                    <input type="file" multiple class="d-none">
+                            <div class="btn-group shadow-sm">
+                                <label
+                                    class="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 m-0 cursor-pointer">
+                                    <i class="bi bi-file-earmark-plus"></i> Choose File
+                                    <input type="file" name="meetingFile" id="fileInput" class="d-none"
+                                        accept="video/mp4,audio/*">
                                 </label>
-                            </li>
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center gap-3 py-2 text-muted disabled"
-                                    href="#">
-                                    <i class="bi bi-dropbox"></i> From Dropbox <span
-                                        class="badge bg-light text-secondary ms-auto"
-                                        style="font-size: 0.6rem;">SOON</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center gap-3 py-2 text-muted disabled"
-                                    href="#">
-                                    <i class="bi bi-google"></i> Google Drive <span
-                                        class="badge bg-light text-secondary ms-auto"
-                                        style="font-size: 0.6rem;">SOON</span>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center gap-3 py-2" href="#">
-                                    <i class="bi bi-link-45deg text-primary"></i> From URL
-                                </a>
-                            </li>
-                        </ul>
+
+                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split px-3"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="visually-hidden">Toggle Dropdown</span>
+                                </button>
+
+                                <ul class="upload-dropdown-menu dropdown-menu shadow-lg border-0 mt-2 rounded-3">
+                                    <li>
+                                        <label
+                                            class="dropdown-item d-flex align-items-center gap-3 py-2 cursor-pointer">
+                                            <i class="bi bi-laptop text-primary"></i> From Device
+                                            <input type="file" class="d-none">
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center gap-3 py-2 text-muted disabled"
+                                            href="#">
+                                            <i class="bi bi-dropbox"></i> From Dropbox <span
+                                                class="badge bg-light text-secondary ms-auto"
+                                                style="font-size: 0.6rem;">SOON</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center gap-3 py-2 text-muted disabled"
+                                            href="#">
+                                            <i class="bi bi-google"></i> Google Drive <span
+                                                class="badge bg-light text-secondary ms-auto"
+                                                style="font-size: 0.6rem;">SOON</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item d-flex align-items-center gap-3 py-2" href="#">
+                                            <i class="bi bi-link-45deg text-primary"></i> From URL
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="processingUI" class="d-none py-4">
+                            <div class="spinner-border text-primary mb-3" role="status"
+                                style="width: 3rem; height: 3rem;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <h5 class="fw-bold text-dark">Processing File...</h5>
+                            <p class="text-muted small">Converting and transcribing with AI. This may take a moment.</p>
+                        </div>
+
                     </div>
-                </div>
+                </form>
 
             </div>
         </div>
     </div>
+
+    <section class="py-5 bg-white animate-on-scroll">
+        <div class="container py-4">
+            <div class="row align-items-center g-4 justify-content-between">
+                <div class="col-lg-5 pe-lg-4">
+                    <span
+                        class="badge bg-primary bg-opacity-10 text-primary text-uppercase px-2 py-1 rounded-pill mb-3 fw-bold"
+                        style="letter-spacing: 0.5px; font-size: 0.7rem;">
+                        How does it work?
+                    </span>
+                    <h2 class="fw-bold mb-4 text-dark" style="font-size: 2.25rem;">How to process a recording?</h2>
+                    <div class="mb-3">
+                        <div class="text-primary text-uppercase fw-bold mb-1"
+                            style="font-size: 0.7rem; letter-spacing: 1px;">Step 1</div>
+                        <h5 class="fw-bold text-dark mb-1" style="font-size: 1.1rem;">1. Upload your file</h5>
+                        <p class="text-muted small mb-0">Start by dragging and dropping your meeting recording into the
+                            upload area, or click to browse your device.</p>
+                        <div class="border-top border-primary opacity-25 my-3"
+                            style="border-style: dotted; border-width: 2px;"></div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="text-primary text-uppercase fw-bold mb-1"
+                            style="font-size: 0.7rem; letter-spacing: 1px;">Step 2</div>
+                        <h5 class="fw-bold text-dark mb-1" style="font-size: 1.1rem;">2. AI Analysis</h5>
+                        <p class="text-muted small mb-0">Briefly automatically transcribes the audio, identifies
+                            different speakers, and extracts key decisions and tasks.</p>
+                        <div class="border-top border-primary opacity-25 my-3"
+                            style="border-style: dotted; border-width: 2px;"></div>
+                    </div>
+                    <div>
+                        <div class="text-primary text-uppercase fw-bold mb-1"
+                            style="font-size: 0.7rem; letter-spacing: 1px;">Step 3</div>
+                        <h5 class="fw-bold text-dark mb-1" style="font-size: 1.1rem;">3. Review & Export</h5>
+                        <p class="text-muted small mb-0">Once complete, you get a structured summary and action items
+                            ready to push directly to your team's workflow tools.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-5 mt-lg-0">
+                    <div class="integration-hub mx-auto">
+                        <div class="hub-center">
+                            <i class="bi bi-arrow-repeat text-primary" style="font-size: 4rem;"></i>
+                        </div>
+                        <div class="hub-node node-1 bg-warning text-dark"><i class="bi bi-file-earmark-play"></i> MP4
+                        </div>
+                        <div class="hub-node node-2 bg-success text-white"><i class="bi bi-file-earmark-music"></i> M4A
+                        </div>
+                        <div class="hub-node node-3 text-dark" style="background: #fbbf24;"><i
+                                class="bi bi-file-earmark-music"></i> WAV</div>
+                        <div class="hub-node node-4 text-white" style="background: #f97316;"><i
+                                class="bi bi-collection-play"></i> Audio & Video</div>
+                        <div class="hub-node node-5 text-white bg-primary"><i class="bi bi-file-earmark-music"></i> MP3
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function () {
+            if (this.files.length > 0) {
+                document.getElementById('uploadUI').classList.add('d-none');
+                document.getElementById('processingUI').classList.remove('d-none');
+                document.getElementById('uploadForm').submit();
+            }
+        });
+    </script>
 
     <%- include("partials/footer.ejs") %>
