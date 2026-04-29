@@ -1,0 +1,17 @@
+<%- include("partials/header.ejs") %>
+
+    <div class="container py-5 text-center mt-5">
+        <div class="mb-4">
+            <i class="bi bi-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+        </div>
+        <h1 class="fw-bold text-dark mb-2">Something went wrong</h1>
+        <div class="bg-light border rounded-3 p-4 mx-auto mt-4 text-start text-danger" style="max-width: 600px;">
+            <code
+                class="fs-6"><%= locals.message ? message : 'Internal Server Error. Check the terminal logs.' %></code>
+        </div>
+        <div class="mt-5">
+            <a href="/" class="btn btn-primary rounded-pill px-4">Go Back Home</a>
+        </div>
+    </div>
+
+    <%- include("partials/footer.ejs") %>

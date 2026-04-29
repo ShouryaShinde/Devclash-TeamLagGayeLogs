@@ -8,17 +8,16 @@
           <div class="col-lg-6 d-none d-lg-flex login-visual">
             <div class="text-center">
               <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                class="img-fluid mb-4" alt="Briefly Login" style="max-width: 80%;">
-              <h3 class="text-white fw-bold mt-4">Welcome Back</h3>
-              <p class="text-white-50 px-4">Sign in to access your dashboard, review your action items, and catch up on
-                meeting memories.</p>
+                class="img-fluid mb-4" alt="Briefly Register" style="max-width: 80%;">
+              <h3 class="text-white fw-bold mt-4">Join Briefly</h3>
+              <p class="text-white-50 px-4">Create your account and start capturing meeting intelligence with AI-powered insights.</p>
             </div>
           </div>
 
           <div class="col-lg-6 login-form-side bg-white">
             <div class="w-100">
-              <h3 class="fw-bold mb-1">Sign In</h3>
-              <p class="text-muted mb-4">Please enter your credentials to continue.</p>
+              <h3 class="fw-bold mb-1">Create Account</h3>
+              <p class="text-muted mb-4">Fill in your details to get started.</p>
 
               <% if (typeof error !== 'undefined' && error) { %>
                 <div class="alert alert-danger d-flex align-items-center gap-2 py-2 px-3 rounded-3" role="alert" id="serverError">
@@ -39,48 +38,51 @@
               </div>
 
               <div class="divider d-flex align-items-center my-4">
-                <p class="text-center fw-semibold mx-3 mb-0 text-muted small">OR CONTINUE WITH EMAIL</p>
+                <p class="text-center fw-semibold mx-3 mb-0 text-muted small">OR REGISTER WITH EMAIL</p>
               </div>
 
-              <form action="/auth/login" method="POST" id="loginForm" novalidate>
-                <div class="mb-4">
+              <form action="/auth/register" method="POST" id="registerForm" novalidate>
+                <div class="mb-3">
+                  <label class="form-label fw-semibold" for="nameInput">Full Name</label>
+                  <input type="text" id="nameInput" name="name" class="form-control form-control-lg bg-light border-0"
+                    placeholder="John Doe" value="<%= typeof name !== 'undefined' ? name : '' %>" required>
+                  <div class="invalid-feedback" id="nameError">Please enter your name.</div>
+                </div>
+
+                <div class="mb-3">
                   <label class="form-label fw-semibold" for="emailInput">Email address</label>
                   <input type="email" id="emailInput" name="email" class="form-control form-control-lg bg-light border-0"
-                    placeholder="name@company.com" required>
+                    placeholder="name@company.com" value="<%= typeof email !== 'undefined' ? email : '' %>" required>
                   <div class="invalid-feedback" id="emailError">Please enter a valid email address.</div>
                 </div>
 
-                <div class="mb-4">
-                  <div class="d-flex justify-content-between align-items-center mb-1">
-                    <label class="form-label fw-semibold mb-0" for="passwordInput">Password</label>
-                    <a href="#!" class="text-primary fw-semibold text-decoration-none small">Forgot password?</a>
-                  </div>
+                <div class="mb-3">
+                  <label class="form-label fw-semibold" for="passwordInput">Password</label>
                   <div class="position-relative">
                     <input type="password" id="passwordInput" name="password" class="form-control form-control-lg bg-light border-0"
-                      placeholder="Enter your password" required>
-                    <button type="button" class="btn btn-link position-absolute end-0 top-50 translate-middle-y text-muted pe-3" 
+                      placeholder="Min. 6 characters" required>
+                    <button type="button" class="btn btn-link position-absolute end-0 top-50 translate-middle-y text-muted pe-3"
                       id="togglePassword" tabindex="-1" style="z-index:5;">
                       <i class="bi bi-eye-slash" id="togglePasswordIcon"></i>
                     </button>
                   </div>
-                  <div class="invalid-feedback" id="passwordError">Password is required.</div>
+                  <div class="invalid-feedback" id="passwordError">Password must be at least 6 characters.</div>
                 </div>
 
-                <div class="form-check mb-4">
-                  <input class="form-check-input" type="checkbox" value="" id="rememberMe">
-                  <label class="form-check-label text-muted" for="rememberMe">
-                    Remember me for 30 days
-                  </label>
+                <div class="mb-4">
+                  <label class="form-label fw-semibold" for="confirmPasswordInput">Confirm Password</label>
+                  <input type="password" id="confirmPasswordInput" name="confirmPassword" class="form-control form-control-lg bg-light border-0"
+                    placeholder="Re-enter your password" required>
+                  <div class="invalid-feedback" id="confirmPasswordError">Passwords do not match.</div>
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-lg w-100" id="loginBtn">
-                  <span id="loginBtnText">Login to account</span>
-                  <span id="loginBtnSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
+                <button type="submit" class="btn btn-primary btn-lg w-100" id="registerBtn">
+                  <span id="registerBtnText">Create Account</span>
+                  <span id="registerBtnSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
                 </button>
 
                 <p class="text-center text-muted mt-4 mb-0">
-                  Don't have an account? <a href="/register" class="text-primary fw-bold text-decoration-none">Register
-                    here</a>
+                  Already have an account? <a href="/login" class="text-primary fw-bold text-decoration-none">Sign in</a>
                 </p>
               </form>
             </div>
