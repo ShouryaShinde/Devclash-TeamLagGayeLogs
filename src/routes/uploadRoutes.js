@@ -37,7 +37,18 @@ const upload = multer({
 });
 
 // ─── POST /upload-process ────────────────────────────────────
-router.post("/", upload.single("meetingFile"), async (req, res) => {
+router.post("/", (req, res, next) => {
+  upload.single("meetingFile")(req, res, (err) => {
+    if (err) {
+      console.error("❌ Multer upload error:", err.message);
+      if (err.code === "LIMIT_FILE_SIZE") {
+        return res.redirect("/uploads?error=File is too large. Maximum size is 500MB.");
+      }
+      return res.redirect(`/uploads?error=${encodeURIComponent(err.message)}`);
+    }
+    next();
+  });
+}, async (req, res) => {
   try {
     if (!req.file) {
       return res.redirect("/uploads?error=No file selected");
@@ -47,6 +58,8 @@ router.post("/", upload.single("meetingFile"), async (req, res) => {
     const title = req.body.meetingTitle?.trim() || req.file.originalname;
     const fileName = req.file.originalname;
     const filePath = req.file.path;
+
+    console.log(`📁 File uploaded: ${fileName} (${(req.file.size / 1024 / 1024).toFixed(1)}MB) at ${filePath}`);
 
     // Create meeting record with 'processing' status
     const [result] = await pool.query(

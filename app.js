@@ -154,6 +154,16 @@ app.use((req, res) => {
 // Global Error Handler
 app.use((err, req, res, next) => {
     console.error("🔥 Server Error:", err.message);
+    console.error("   Stack:", err.stack);
+
+    // Handle Multer-specific errors (file upload issues)
+    if (err.name === "MulterError" || err.code === "LIMIT_FILE_SIZE") {
+      const msg = err.code === "LIMIT_FILE_SIZE"
+        ? "File is too large. Maximum size is 500MB."
+        : err.message;
+      return res.redirect(`/uploads?error=${encodeURIComponent(msg)}`);
+    }
+
     res.status(err.status || 500).send("500 - Internal Server Error. Check the terminal for details.");
 });
 
