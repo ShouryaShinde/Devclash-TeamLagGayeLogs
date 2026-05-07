@@ -2,3 +2,6 @@ node_modules/
 .env
 .vscode
 uploads/
+src/uploads/
+*.mp4
+*.wav

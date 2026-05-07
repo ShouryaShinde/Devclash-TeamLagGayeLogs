@@ -1,4 +1,4 @@
-g/**
+/**
  * Middleware: Require the user to be logged in.
  * Redirects to /login if no session exists.
  */
