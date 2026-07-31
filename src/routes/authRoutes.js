@@ -8,28 +8,31 @@ const router = Router();
 router.post("/register", async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
 
+  const cleanName = name ? name.trim() : "";
+  const cleanEmail = email ? email.trim().toLowerCase() : "";
+
   // Basic validation
-  if (!name || !email || !password || !confirmPassword) {
+  if (!cleanName || !cleanEmail || !password || !confirmPassword) {
     return res.render("register", {
       error: "All fields are required.",
-      name,
-      email,
+      name: cleanName,
+      email: cleanEmail,
     });
   }
 
   if (password.length < 6) {
     return res.render("register", {
       error: "Password must be at least 6 characters.",
-      name,
-      email,
+      name: cleanName,
+      email: cleanEmail,
     });
   }
 
   if (password !== confirmPassword) {
     return res.render("register", {
       error: "Passwords do not match.",
-      name,
-      email,
+      name: cleanName,
+      email: cleanEmail,
     });
   }
 
@@ -37,14 +40,14 @@ router.post("/register", async (req, res) => {
     // Check if email already exists
     const [existing] = await pool.query(
       "SELECT id FROM users WHERE email = ?",
-      [email]
+      [cleanEmail]
     );
 
     if (existing.length > 0) {
       return res.render("register", {
         error: "An account with this email already exists.",
-        name,
-        email,
+        name: cleanName,
+        email: cleanEmail,
       });
     }
 
@@ -52,23 +55,24 @@ router.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 12);
     const [result] = await pool.query(
       "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
-      [name, email, hashedPassword]
+      [cleanName, cleanEmail, hashedPassword]
     );
 
     // Create session
     req.session.user = {
       id: result.insertId,
-      name,
-      email,
+      name: cleanName,
+      email: cleanEmail,
     };
 
-    res.redirect("/uploads");
+    console.log(`👤 New user registered: ${cleanEmail} (ID: ${result.insertId})`);
+    res.redirect("/dashboard");
   } catch (err) {
     console.error("Registration error:", err);
     res.render("register", {
       error: "Something went wrong. Please try again.",
-      name,
-      email,
+      name: cleanName,
+      email: cleanEmail,
     });
   }
 });
@@ -76,21 +80,24 @@ router.post("/register", async (req, res) => {
 // ─── LOGIN ───────────────────────────────────────────────────
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
+  const cleanEmail = email ? email.trim().toLowerCase() : "";
 
-  if (!email || !password) {
+  if (!cleanEmail || !password) {
     return res.render("login", {
       error: "Email and password are required.",
+      email: cleanEmail,
     });
   }
 
   try {
     const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [
-      email,
+      cleanEmail,
     ]);
 
     if (rows.length === 0) {
       return res.render("login", {
         error: "Invalid email or password.",
+        email: cleanEmail,
       });
     }
 
@@ -100,6 +107,7 @@ router.post("/login", async (req, res) => {
     if (!isMatch) {
       return res.render("login", {
         error: "Invalid email or password.",
+        email: cleanEmail,
       });
     }
 
@@ -110,20 +118,25 @@ router.post("/login", async (req, res) => {
       email: user.email,
     };
 
-    res.redirect("/uploads");
+    console.log(`🔑 User logged in: ${user.email} (ID: ${user.id})`);
+    res.redirect("/dashboard");
   } catch (err) {
     console.error("Login error:", err);
     res.render("login", {
       error: "Something went wrong. Please try again.",
+      email: cleanEmail,
     });
   }
 });
 
 // ─── LOGOUT ──────────────────────────────────────────────────
 router.get("/logout", (req, res) => {
+  const userEmail = req.session.user?.email;
   req.session.destroy((err) => {
     if (err) console.error("Logout error:", err);
-    res.redirect("/");
+    if (userEmail) console.log(`👋 User logged out: ${userEmail}`);
+    res.clearCookie("connect.sid");
+    res.redirect("/login");
   });
 });
 

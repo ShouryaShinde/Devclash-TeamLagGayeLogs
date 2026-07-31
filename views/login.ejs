@@ -46,7 +46,7 @@
                 <div class="mb-4">
                   <label class="form-label fw-semibold" for="emailInput">Email address</label>
                   <input type="email" id="emailInput" name="email" class="form-control form-control-lg bg-light border-0"
-                    placeholder="name@company.com" required>
+                    placeholder="name@company.com" value="<%= typeof email !== 'undefined' ? email : '' %>" required>
                   <div class="invalid-feedback" id="emailError">Please enter a valid email address.</div>
                 </div>
 
