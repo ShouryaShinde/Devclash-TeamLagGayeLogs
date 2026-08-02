@@ -71,6 +71,8 @@ export async function initDatabase() {
         file_name VARCHAR(255) NOT NULL,
         file_path VARCHAR(500),
         transcript LONGTEXT,
+        transcript_json LONGTEXT,
+        speaker_map JSON,
         summary TEXT,
         key_decisions JSON,
         action_items JSON,
@@ -80,9 +82,40 @@ export async function initDatabase() {
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `);
+
+    // Add columns if table already existed without them
+    try {
+      await pool.query(`ALTER TABLE meetings ADD COLUMN transcript_json LONGTEXT`);
+    } catch { /* column exists */ }
+    try {
+      await pool.query(`ALTER TABLE meetings ADD COLUMN speaker_map JSON`);
+    } catch { /* column exists */ }
+
     console.log("✅ Meetings table is ready.");
   } catch (err) {
     console.error("❌ Failed to create meetings table:", err.message);
+    throw err;
+  }
+
+  // Create meeting_schedules table
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS meeting_schedules (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        meeting_id INT NOT NULL,
+        event_date VARCHAR(50),
+        formatted_date VARCHAR(100),
+        goal TEXT NOT NULL,
+        event_type VARCHAR(50) DEFAULT 'deadline',
+        owner VARCHAR(100) DEFAULT 'Unassigned',
+        raw_mention VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (meeting_id) REFERENCES meetings(id) ON DELETE CASCADE
+      )
+    `);
+    console.log("✅ Meeting schedules table is ready.");
+  } catch (err) {
+    console.error("❌ Failed to create meeting_schedules table:", err.message);
     throw err;
   }
 }

@@ -6,6 +6,7 @@ import session from "express-session";
 import zoomRoutes from "./src/routes/zoomRoutes.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import uploadRoutes from "./src/routes/uploadRoutes.js";
+import meetingRoutes from "./src/routes/meetingRoutes.js";
 import { initDatabase } from "./src/config/db.js";
 import pool from "./src/config/db.js";
 import { requireAuth, guestOnly } from "./src/middleware/authMiddleware.js";
@@ -51,6 +52,7 @@ app.use((req, res, next) => {
 app.use("/api/zoom", zoomRoutes);
 app.use("/auth", authRoutes);
 app.use("/upload-process", requireAuth, uploadRoutes);
+app.use("/api/meetings", meetingRoutes);
 
 // ─── Public Pages ────────────────────────────────────────────
 app.get("/", (req, res) => res.render("home"));
@@ -74,10 +76,10 @@ app.get("/dashboard", requireAuth, async (req, res) => {
       return res.redirect(`/dashboard/${meetings[0].id}`);
     }
     // No meetings — show empty state
-    res.render("dashboard", { meetings, meeting: null });
+    res.render("dashboard", { meetings, meeting: null, schedules: [] });
   } catch (err) {
     console.error("Dashboard error:", err);
-    res.render("dashboard", { meetings: [], meeting: null });
+    res.render("dashboard", { meetings: [], meeting: null, schedules: [] });
   }
 });
 
@@ -105,6 +107,12 @@ app.get("/dashboard/:id", requireAuth, async (req, res) => {
 
     const meeting = rows[0];
 
+    // Fetch schedules linked to this meeting
+    const [schedules] = await pool.query(
+      "SELECT * FROM meeting_schedules WHERE meeting_id = ? ORDER BY event_date ASC",
+      [meetingId]
+    );
+
     // Parse JSON fields safely
     try {
       meeting.key_decisions = typeof meeting.key_decisions === "string"
@@ -118,7 +126,19 @@ app.get("/dashboard/:id", requireAuth, async (req, res) => {
         : meeting.action_items || [];
     } catch { meeting.action_items = []; }
 
-    res.render("dashboard", { meetings, meeting });
+    try {
+      meeting.transcript_json = typeof meeting.transcript_json === "string"
+        ? JSON.parse(meeting.transcript_json)
+        : meeting.transcript_json || [];
+    } catch { meeting.transcript_json = []; }
+
+    try {
+      meeting.speaker_map = typeof meeting.speaker_map === "string"
+        ? JSON.parse(meeting.speaker_map)
+        : meeting.speaker_map || {};
+    } catch { meeting.speaker_map = {}; }
+
+    res.render("dashboard", { meetings, meeting, schedules });
   } catch (err) {
     console.error("Meeting detail error:", err);
     res.redirect("/dashboard");

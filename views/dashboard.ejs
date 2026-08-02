@@ -8,8 +8,7 @@
              ═══════════════════════════════════════════════════════════ -->
         <div class="col-lg-3 col-xl-2 border-end bg-white p-0 d-none d-lg-block" style="min-height: calc(100vh - 70px);">
             <div class="p-4 border-bottom d-flex justify-content-between align-items-center">
-                <h6 class="text-uppercase fw-bold text-muted mb-0" style="font-size: 0.75rem; letter-spacing: 1px;">Your
-                Library</h6>
+                <h6 class="text-uppercase fw-bold text-muted mb-0" style="font-size: 0.75rem; letter-spacing: 1px;">Your Library</h6>
                 <a href="/uploads" class="btn btn-sm btn-primary rounded-pill px-3">
                     <i class="bi bi-plus-lg me-1"></i>New
                 </a>
@@ -55,7 +54,7 @@
                 </div>
                 <h3 class="fw-bold text-dark mb-2">No Meetings Yet</h3>
                 <p class="text-muted mb-4" style="max-width: 420px;">
-                    Upload your first meeting recording and Briefly will transcribe it, extract key decisions, and create action items automatically.
+                    Upload your meeting recording to get speaker-separated transcripts, extracted action items, and intelligent schedule dates automatically.
                 </p>
                 <a href="/uploads" class="btn btn-primary btn-lg rounded-pill px-5 fw-semibold">
                     <i class="bi bi-upload me-2"></i>Upload a Recording
@@ -68,10 +67,10 @@
                 <div class="spinner-border text-primary mb-4" role="status" style="width: 4rem; height: 4rem;">
                     <span class="visually-hidden">Processing...</span>
                 </div>
-                <h3 class="fw-bold text-dark mb-2">Processing Your Meeting</h3>
+                <h3 class="fw-bold text-dark mb-2">Processing & Diarizing Your Meeting</h3>
                 <p class="text-muted mb-1"><strong>"<%= meeting.title %>"</strong></p>
                 <p class="text-muted mb-4" style="max-width: 420px;">
-                    We're extracting audio, transcribing with AI, and generating insights. This may take a few minutes depending on the file size.
+                    Extracting audio, running speaker diarization, and detecting calendar dates & commitments.
                 </p>
                 <div class="d-flex gap-3 align-items-center text-muted small">
                     <span class="d-flex align-items-center gap-1"><i class="bi bi-file-earmark-music text-primary"></i> <%= meeting.file_name %></span>
@@ -93,7 +92,7 @@
                                 pollStatus();
                             }
                         } catch { pollStatus(); }
-                    }, 5000);
+                    }, 4000);
                 })();
             </script>
 
@@ -115,14 +114,14 @@
 
         <% } else { %>
             <!-- ══════════════════════════════════════════════════════
-                 COMPLETED — Full Meeting View
+                 COMPLETED — Full Diarized Meeting View
                  ══════════════════════════════════════════════════════ -->
 
             <!-- Header -->
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
                 <div>
                     <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-1 mb-2 fw-semibold border border-success border-opacity-25">
-                        <i class="bi bi-check-circle me-1"></i> Processed
+                        <i class="bi bi-check-circle me-1"></i> Speaker Diarized
                     </span>
                     <h2 class="fw-bold text-dark mb-1"><%= meeting.title %></h2>
                     <p class="text-muted mb-0">
@@ -132,26 +131,141 @@
                     </p>
                 </div>
                 <div class="d-flex gap-2">
-                    <a href="/uploads" class="btn btn-outline-secondary rounded-pill px-4 fw-semibold"><i class="bi bi-plus-lg me-2"></i>New Upload</a>
+                    <button class="btn btn-outline-primary rounded-pill px-3 fw-semibold" data-bs-toggle="modal" data-bs-target="#renameSpeakersModal">
+                        <i class="bi bi-people me-1"></i> Participant Names
+                    </button>
+                    <a href="/uploads" class="btn btn-primary rounded-pill px-4 fw-semibold"><i class="bi bi-plus-lg me-2"></i>New Upload</a>
                 </div>
             </div>
 
-            <!-- Tabs -->
+            <!-- Navigation Tabs -->
             <ul class="nav nav-tabs mb-4 border-bottom" id="meetingTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active fw-bold px-4 py-3 text-dark" id="summary-tab" data-bs-toggle="tab"
-                        data-bs-target="#summary" type="button" role="tab">Overview & Insights</button>
+                    <button class="nav-link active fw-bold px-4 py-3 text-dark" id="transcript-tab" data-bs-toggle="tab"
+                        data-bs-target="#transcript" type="button" role="tab">
+                        <i class="bi bi-chat-quote me-2 text-primary"></i>Speaker Transcript
+                    </button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link fw-bold px-4 py-3 text-muted" id="transcript-tab" data-bs-toggle="tab"
-                        data-bs-target="#transcript" type="button" role="tab">Full Transcript</button>
+                    <button class="nav-link fw-bold px-4 py-3 text-muted" id="summary-tab" data-bs-toggle="tab"
+                        data-bs-target="#summary" type="button" role="tab">
+                        <i class="bi bi-card-checklist me-2 text-secondary"></i>Overview & Insights
+                    </button>
                 </li>
             </ul>
 
             <div class="tab-content" id="meetingTabsContent">
 
-                <!-- ──── Overview Tab ─────────────────────────────── -->
-                <div class="tab-pane fade show active" id="summary" role="tabpanel">
+                <!-- ═══════════════════════════════════════════════════
+                     TRANSCRIPT TAB (Speaker Diarization Chat UI)
+                     ═══════════════════════════════════════════════════ -->
+                <div class="tab-pane fade show active" id="transcript" role="tabpanel">
+
+                    <!-- Chat Container -->
+                    <div class="bg-white border rounded-4 shadow-sm p-4 mb-4">
+                        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+                            <div>
+                                <h5 class="fw-bold text-dark mb-0">Speaker-Separated Dialogue</h5>
+                                <small class="text-muted">Automatically identified speakers with timestamps</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#renameSpeakersModal">
+                                <i class="bi bi-pencil me-1"></i> Edit Labels
+                            </button>
+                        </div>
+
+                        <% if (meeting.transcript_json && meeting.transcript_json.length > 0) { %>
+                            <div class="speaker-chat-list d-flex flex-column gap-3">
+                                <% 
+                                    const colors = ['bg-primary', 'bg-success', 'bg-purple', 'bg-warning', 'bg-info', 'bg-danger'];
+                                    const speakerMap = meeting.speaker_map || {};
+                                    meeting.transcript_json.forEach(function(seg, index) { 
+                                        const rawSpeaker = seg.speakerId || seg.speakerName || 'Speaker 1';
+                                        const displayName = speakerMap[rawSpeaker] || seg.speakerName || rawSpeaker;
+                                        const speakerNum = parseInt(rawSpeaker.replace(/\D/g, '')) || (index + 1);
+                                        const avatarBg = colors[(speakerNum - 1) % colors.length];
+                                %>
+                                    <div class="d-flex gap-3 align-items-start p-3 rounded-3 border bg-light bg-opacity-50 hover-shadow transition">
+                                        <div class="<%= avatarBg %> text-white rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0 shadow-sm"
+                                            style="width: 44px; height: 44px; font-size: 0.95rem;">
+                                            <%= displayName.charAt(0).toUpperCase() %>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center gap-2 mb-1">
+                                                <span class="fw-bold text-dark speaker-label-name" data-speaker-id="<%= rawSpeaker %>"><%= displayName %></span>
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill px-2 py-1" style="font-size: 0.72rem;">
+                                                    <i class="bi bi-clock me-1"></i><%= seg.timestamp || '[00:00]' %>
+                                                </span>
+                                            </div>
+                                            <p class="text-secondary mb-0" style="line-height: 1.7; font-size: 0.98rem; white-space: pre-wrap;"><%= seg.text %></p>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+
+                        <% } else if (meeting.transcript) { %>
+                            <!-- Plain text fallback formatting -->
+                            <div class="p-3 bg-light rounded-3 border">
+                                <p class="text-muted mb-0" style="white-space: pre-wrap; line-height: 1.8;"><%= meeting.transcript %></p>
+                            </div>
+                        <% } else { %>
+                            <p class="text-muted text-center py-5">No transcript available for this meeting.</p>
+                        <% } %>
+                    </div>
+
+                    <!-- ═══════════════════════════════════════════════════
+                         UPCOMING DEADLINES & SCHEDULE SECTION
+                         ═══════════════════════════════════════════════════ -->
+                    <div class="bg-white border rounded-4 shadow-sm p-4">
+                        <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
+                            <h5 class="fw-bold mb-0 d-flex align-items-center gap-2 text-dark">
+                                <i class="bi bi-calendar-event text-primary"></i> Upcoming Deadlines & Schedule
+                            </h5>
+                            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-1 fw-semibold">
+                                Extracted by AI
+                            </span>
+                        </div>
+
+                        <% if (schedules && schedules.length > 0) { %>
+                            <div class="row g-3">
+                                <% schedules.forEach(function(sched) { %>
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="border rounded-3 p-3 bg-light h-100 d-flex flex-column justify-content-between shadow-sm hover-lift">
+                                            <div>
+                                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                                    <span class="badge bg-primary text-white rounded-pill px-3 py-1 fw-bold" style="font-size: 0.82rem;">
+                                                        📅 <%= sched.formatted_date || sched.event_date %>
+                                                    </span>
+                                                    <span class="badge bg-white text-dark border rounded-pill px-2 py-1 text-uppercase" style="font-size: 0.68rem; letter-spacing: 0.5px;">
+                                                        <%= sched.event_type || 'Deadline' %>
+                                                    </span>
+                                                </div>
+                                                <h6 class="fw-bold text-dark mb-2" style="line-height: 1.4;"><%= sched.goal %></h6>
+                                                <% if (sched.raw_mention) { %>
+                                                    <p class="text-muted small fst-italic mb-3">"<%= sched.raw_mention %>"</p>
+                                                <% } %>
+                                            </div>
+                                            <div class="pt-2 border-top d-flex align-items-center justify-content-between text-muted small">
+                                                <span><i class="bi bi-person me-1"></i><%= sched.owner || 'Unassigned' %></span>
+                                                <span class="text-success fw-semibold"><i class="bi bi-check2-circle me-1"></i>Tracked</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        <% } else { %>
+                            <div class="text-center py-4 text-muted">
+                                <i class="bi bi-calendar-x" style="font-size: 2.2rem; opacity: 0.5;"></i>
+                                <p class="small mt-2 mb-0">No upcoming date commitments identified in this transcript.</p>
+                            </div>
+                        <% } %>
+                    </div>
+
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════
+                     OVERVIEW & INSIGHTS TAB
+                     ═══════════════════════════════════════════════════ -->
+                <div class="tab-pane fade" id="summary" role="tabpanel">
                     <div class="row g-4">
 
                         <div class="col-xl-8">
@@ -160,7 +274,7 @@
                                 <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
                                     <i class="bi bi-card-text text-primary"></i> Executive Summary
                                 </h5>
-                                <p class="text-muted mb-0"><%= meeting.summary || 'No summary available.' %></p>
+                                <p class="text-muted mb-0" style="line-height: 1.8;"><%= meeting.summary || 'No summary available.' %></p>
                             </div>
 
                             <!-- Key Decisions -->
@@ -221,34 +335,99 @@
                     </div>
                 </div>
 
-                <!-- ──── Transcript Tab ───────────────────────────── -->
-                <div class="tab-pane fade" id="transcript" role="tabpanel">
-                    <div class="bg-white border rounded-4 shadow-sm p-4">
-                        <% if (meeting.transcript) { %>
-                            <div class="transcript-entry d-flex gap-3 mb-4">
-                                <div class="speaker-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0"
-                                    style="width: 45px; height: 45px;">
-                                    <i class="bi bi-mic"></i>
-                                </div>
-                                <div>
-                                    <div class="d-flex align-items-center gap-2 mb-1">
-                                        <h6 class="fw-bold mb-0 text-dark">Full Transcript</h6>
-                                        <span class="text-muted small"><%= new Date(meeting.created_at).toLocaleString('en-US', { hour: 'numeric', minute: '2-digit' }) %></span>
-                                    </div>
-                                    <p class="text-muted mb-0" style="white-space: pre-wrap; line-height: 1.8;"><%= meeting.transcript %></p>
-                                </div>
-                            </div>
-                        <% } else { %>
-                            <p class="text-muted text-center py-5">No transcript available for this meeting.</p>
-                        <% } %>
-                    </div>
-                </div>
-
             </div>
         <% } %>
 
         </div>
     </div>
     </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         RENAME SPEAKERS MODAL
+         ═══════════════════════════════════════════════════════════ -->
+    <% if (meeting) { %>
+        <div class="modal fade" id="renameSpeakersModal" tabindex="-1" aria-labelledby="renameSpeakersModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-4 shadow border-0">
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <h5 class="modal-title fw-bold text-dark" id="renameSpeakersModalLabel">
+                            <i class="bi bi-person-gear text-primary me-2"></i>Participant Names
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body py-3">
+                        <p class="text-muted small mb-3">
+                            Assign participant names to replace generic speaker labels (e.g. Speaker 1 → John Doe).
+                        </p>
+                        <form id="renameSpeakersForm">
+                            <% 
+                                const detectedSpeakers = new Set();
+                                if (meeting.transcript_json && meeting.transcript_json.length > 0) {
+                                    meeting.transcript_json.forEach(s => detectedSpeakers.add(s.speakerId || s.speakerName));
+                                } else {
+                                    detectedSpeakers.add('Speaker 1');
+                                    detectedSpeakers.add('Speaker 2');
+                                    detectedSpeakers.add('Speaker 3');
+                                }
+                                const currentMap = meeting.speaker_map || {};
+                                Array.from(detectedSpeakers).forEach(function(spkId) {
+                                    const currentVal = currentMap[spkId] || '';
+                            %>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold text-dark small mb-1"><%= spkId %></label>
+                                    <input type="text" class="form-key-mapping form-control rounded-3" 
+                                           data-speaker-id="<%= spkId %>" 
+                                           placeholder="e.g. Participant Name" 
+                                           value="<%= currentVal %>">
+                                </div>
+                            <% }); %>
+                        </form>
+                    </div>
+                    <div class="modal-footer border-top-0 pt-0">
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" id="saveSpeakersBtn" class="btn btn-primary rounded-pill px-4 fw-semibold">
+                            <i class="bi bi-check2 me-1"></i> Save Names
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('saveSpeakersBtn')?.addEventListener('click', async () => {
+                const inputs = document.querySelectorAll('.form-key-mapping');
+                const speakerMap = {};
+                inputs.forEach(input => {
+                    const spkId = input.getAttribute('data-speaker-id');
+                    const val = input.value.trim();
+                    if (val) {
+                        speakerMap[spkId] = val;
+                    }
+                });
+
+                try {
+                    const res = await fetch('/api/meetings/<%= meeting.id %>/speakers', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ speakerMap })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        window.location.reload();
+                    } else {
+                        alert(data.error || 'Failed to update speaker names.');
+                    }
+                } catch (err) {
+                    alert('Error saving speaker names.');
+                }
+            });
+        </script>
+    <% } %>
+
+    <style>
+        .bg-purple { background-color: #6f42c1 !important; }
+        .hover-shadow:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+        .transition { transition: all 0.2s ease-in-out; }
+    </style>
 
     <%- include("partials/footer") %>

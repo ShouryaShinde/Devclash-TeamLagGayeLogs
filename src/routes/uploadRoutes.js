@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import pool from "../config/db.js";
 import { convertToAudio } from "../utils/ffmpeg.js";
-import { transcribeAudioLocal } from "../services/transcriptionService.js";
+import { transcribeAndDiarizeAudio } from "../services/transcriptionService.js";
 import { analyzeTranscript } from "../services/aiService.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -84,7 +84,7 @@ router.post("/", (req, res, next) => {
 });
 
 /**
- * Background processing: convert → transcribe → AI analyze → save to DB
+ * Background processing: convert → transcribe & diarize → AI analyze → save DB & schedules
  */
 async function processFile(meetingId, filePath, fileName) {
   try {
@@ -97,11 +97,14 @@ async function processFile(meetingId, filePath, fileName) {
       audioPath = await convertToAudio(filePath);
     }
 
-    // Transcribe with Whisper
-    console.log(`🎤 Transcribing audio...`);
-    const transcript = await transcribeAudioLocal(audioPath);
+    // Transcribe & Diarize with Deepgram (or Whisper fallback)
+    console.log(`🎤 Transcribing & Diarizing audio...`);
+    const transcriptionResult = await transcribeAndDiarizeAudio(audioPath);
 
-    if (!transcript) {
+    const transcriptText = transcriptionResult.text;
+    const transcriptJson = JSON.stringify(transcriptionResult.segments || []);
+
+    if (!transcriptText) {
       await pool.query(
         "UPDATE meetings SET status = 'failed', summary = ? WHERE id = ?",
         ["Transcription returned empty results.", meetingId]
@@ -109,17 +112,22 @@ async function processFile(meetingId, filePath, fileName) {
       return;
     }
 
-    // AI analysis
-    console.log(`🧠 Analyzing transcript with AI...`);
-    const analysis = await analyzeTranscript(transcript);
+    // Get meeting creation date for relative date resolution
+    const [meetingRows] = await pool.query("SELECT created_at FROM meetings WHERE id = ?", [meetingId]);
+    const meetingDate = meetingRows.length > 0 ? meetingRows[0].created_at : new Date();
 
-    // Save results to DB
+    // AI analysis & date/schedule extraction
+    console.log(`🧠 Analyzing transcript & extracting dates with AI...`);
+    const analysis = await analyzeTranscript(transcriptText, meetingDate);
+
+    // Save core results to meetings DB table
     await pool.query(
       `UPDATE meetings 
-       SET transcript = ?, summary = ?, key_decisions = ?, action_items = ?, status = 'completed' 
+       SET transcript = ?, transcript_json = ?, summary = ?, key_decisions = ?, action_items = ?, status = 'completed' 
        WHERE id = ?`,
       [
-        transcript,
+        transcriptText,
+        transcriptJson,
         analysis.summary,
         JSON.stringify(analysis.keyDecisions),
         JSON.stringify(analysis.actionItems),
@@ -127,7 +135,28 @@ async function processFile(meetingId, filePath, fileName) {
       ]
     );
 
-    console.log(`✅ Meeting #${meetingId} processing complete!`);
+    // Insert extracted schedules into meeting_schedules table for future context & reminders
+    if (analysis.schedules && analysis.schedules.length > 0) {
+      console.log(`📅 Storing ${analysis.schedules.length} extracted schedule commitment(s)...`);
+      for (const item of analysis.schedules) {
+        await pool.query(
+          `INSERT INTO meeting_schedules 
+           (meeting_id, event_date, formatted_date, goal, event_type, owner, raw_mention) 
+           VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          [
+            meetingId,
+            item.event_date,
+            item.formatted_date,
+            item.goal,
+            item.event_type,
+            item.owner,
+            item.raw_mention,
+          ]
+        );
+      }
+    }
+
+    console.log(`✅ Meeting #${meetingId} processing & diarization complete!`);
   } catch (err) {
     console.error(`❌ Processing error for meeting #${meetingId}:`, err.message);
     await pool.query(
