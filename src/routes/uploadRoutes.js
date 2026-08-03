@@ -1,6 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import path from "path";
+import os from "os";
 import { fileURLToPath } from "url";
 import pool from "../config/db.js";
 import { convertToAudio } from "../utils/ffmpeg.js";
@@ -13,7 +14,10 @@ const router = Router();
 // ─── Multer config ───────────────────────────────────────────
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.resolve(__dirname, "../../uploads"));
+    const targetDir = process.env.VERCEL
+      ? os.tmpdir()
+      : path.resolve(__dirname, "../../uploads");
+    cb(null, targetDir);
   },
   filename: (req, file, cb) => {
     const uniqueName = `meeting_${Date.now()}_${file.originalname}`;
@@ -70,13 +74,23 @@ router.post("/", (req, res, next) => {
     const meetingId = result.insertId;
     console.log(`📁 Meeting #${meetingId} created — processing "${fileName}"...`);
 
-    // Redirect immediately — processing happens in background
-    res.redirect(`/dashboard/${meetingId}`);
+    if (process.env.VERCEL) {
+      // In Serverless environment, await pipeline completion before responding
+      try {
+        await processFile(meetingId, filePath, fileName);
+      } catch (err) {
+        console.error(`❌ Pipeline failed for meeting #${meetingId}:`, err.message);
+      }
+      return res.redirect(`/dashboard/${meetingId}`);
+    } else {
+      // Redirect immediately in local/persistent mode — processing happens in background
+      res.redirect(`/dashboard/${meetingId}`);
 
-    // ─── Background processing pipeline ──────────────────────
-    processFile(meetingId, filePath, fileName).catch((err) => {
-      console.error(`❌ Pipeline failed for meeting #${meetingId}:`, err.message);
-    });
+      // ─── Background processing pipeline ──────────────────────
+      processFile(meetingId, filePath, fileName).catch((err) => {
+        console.error(`❌ Pipeline failed for meeting #${meetingId}:`, err.message);
+      });
+    }
   } catch (err) {
     console.error("Upload error:", err);
     res.redirect("/uploads?error=Upload failed. Please try again.");

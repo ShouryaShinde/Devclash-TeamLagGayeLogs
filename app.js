@@ -42,6 +42,16 @@ app.use(
   })
 );
 
+// ─── Ensure DB initialization on Vercel cold starts ──────────
+app.use(async (req, res, next) => {
+  try {
+    await initDatabase();
+  } catch (err) {
+    console.error("DB init warning:", err.message);
+  }
+  next();
+});
+
 // ─── Make session user available in all EJS templates ────────
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
@@ -187,17 +197,21 @@ app.use((err, req, res, next) => {
     res.status(err.status || 500).send("500 - Internal Server Error. Check the terminal for details.");
 });
 
-// ─── Start Server ────────────────────────────────────────────
-async function start() {
-  try {
-    await initDatabase();
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
-    });
-  } catch (err) {
-    console.error("❌ Failed to start server:", err.message);
-    process.exit(1);
+// ─── Start Server (Local Development) ────────────────────────
+if (!process.env.VERCEL) {
+  async function start() {
+    try {
+      await initDatabase();
+      app.listen(PORT, () => {
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
+      });
+    } catch (err) {
+      console.error("❌ Failed to start server:", err.message);
+      process.exit(1);
+    }
   }
+
+  start();
 }
 
-start();
+export default app;

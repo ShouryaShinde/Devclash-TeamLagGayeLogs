@@ -7,41 +7,43 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
-const pool = mysql.createPool({
+const dbConfig = {
   host: process.env.DB_HOST || "localhost",
+  port: parseInt(process.env.DB_PORT || "3306", 10),
   user: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "briefly_db",
   waitForConnections: true,
-  connectionLimit: 10,
+  connectionLimit: process.env.VERCEL ? 5 : 10,
   queueLimit: 0,
-});
+  ...(process.env.DB_SSL === "true" || process.env.DB_SSL === "1"
+    ? { ssl: { rejectUnauthorized: false } }
+    : {}),
+};
+
+const pool = mysql.createPool(dbConfig);
+
+let isInitialized = false;
 
 /**
  * Initialize the database — creates the DB and all tables if they don't exist.
- * Called once on server startup.
  */
 export async function initDatabase() {
-  // First, connect without specifying a database to create it if needed
-  const tempPool = mysql.createPool({
-    host: process.env.DB_HOST || "localhost",
-    user: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || "",
-    waitForConnections: true,
-    connectionLimit: 2,
-  });
+  if (isInitialized) return;
 
+  // Try creating the database if permitted (e.g. local MySQL)
   try {
+    const tempConfig = { ...dbConfig };
+    delete tempConfig.database;
+    const tempPool = mysql.createPool(tempConfig);
     const dbName = process.env.DB_NAME || "briefly_db";
     await tempPool.query(
       `CREATE DATABASE IF NOT EXISTS \`${dbName}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
     );
+    await tempPool.end();
     console.log(`✅ Database "${dbName}" is ready.`);
   } catch (err) {
-    console.error("❌ Failed to create database:", err.message);
-    throw err;
-  } finally {
-    await tempPool.end();
+    console.warn("⚠️ Could not create DB (might be pre-created by cloud provider):", err.message);
   }
 
   // Create users table
@@ -114,6 +116,7 @@ export async function initDatabase() {
       )
     `);
     console.log("✅ Meeting schedules table is ready.");
+    isInitialized = true;
   } catch (err) {
     console.error("❌ Failed to create meeting_schedules table:", err.message);
     throw err;
