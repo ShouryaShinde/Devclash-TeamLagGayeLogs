@@ -3,7 +3,6 @@ import axios from "axios";
 import getAccessToken from "./zoomAuth.js";
 import { convertToAudio } from "../utils/ffmpeg.js";
 import { transcribeAudioLocal } from "./transcriptionService.js";
-import { generateMeetingNotes } from "./aiService.js";
 
 export async function processRecording(url) {
   try {
@@ -27,8 +26,6 @@ export async function processRecording(url) {
         const audioPath = await convertToAudio(videoPath);
         console.log("Ready for transcription:", audioPath);
         const transcript = await transcribeAudioLocal(audioPath);
-        const notes = await generateMeetingNotes(transcript);
-        console.log("AI Notes:", notes);
       } catch (err) {
         console.error("Processing pipeline error:", err);
       }

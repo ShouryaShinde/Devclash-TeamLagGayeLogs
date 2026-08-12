@@ -1,128 +1,433 @@
 <%- include("partials/header") %>
 
-<div class="container-fluid bg-light" style="min-height: calc(100vh - 70px);">
-  <div class="row h-100">
+    <div class="container-fluid bg-light" style="min-height: calc(100vh - 70px);">
+    <div class="row h-100">
 
-    <!-- Sidebar -->
-    <div class="col-lg-3 col-xl-2 border-end bg-white p-0 d-none d-lg-block">
-      <div class="p-4 border-bottom">
-        <h6 class="text-uppercase fw-bold text-muted mb-0" style="font-size: 0.75rem; letter-spacing: 1px;">
-          Your Library
-        </h6>
-      </div>
+        <!-- ═══════════════════════════════════════════════════════════
+             SIDEBAR — Your Library
+             ═══════════════════════════════════════════════════════════ -->
+        <div class="col-lg-3 col-xl-2 border-end bg-white p-0 d-none d-lg-block" style="min-height: calc(100vh - 70px);">
+            <div class="p-4 border-bottom d-flex justify-content-between align-items-center">
+                <h6 class="text-uppercase fw-bold text-muted mb-0" style="font-size: 0.75rem; letter-spacing: 1px;">Your Library</h6>
+                <a href="/uploads" class="btn btn-sm btn-primary rounded-pill px-3">
+                    <i class="bi bi-plus-lg me-1"></i>New
+                </a>
+            </div>
 
-      <div class="list-group list-group-flush">
-        <a href="#"
-          class="list-group-item list-group-item-action bg-primary bg-opacity-10 border-start border-4 border-primary py-3">
-          <div class="d-flex w-100 justify-content-between align-items-center mb-1">
-            <h6 class="mb-0 fw-bold text-dark text-truncate">Q3 Product Roadmap...</h6>
-            <span class="badge bg-danger rounded-pill" style="font-size: 0.6rem;">LIVE</span>
-          </div>
-          <small class="text-muted">Today, 10:30 AM</small>
-        </a>
-      </div>
+            <div class="list-group list-group-flush">
+                <% if (meetings && meetings.length > 0) { %>
+                    <% meetings.forEach(function(m) { %>
+                        <a href="/dashboard/<%= m.id %>"
+                            class="list-group-item list-group-item-action py-3 <%= (meeting && meeting.id === m.id) ? 'bg-primary bg-opacity-10 border-start border-4 border-primary' : '' %>">
+                            <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                                <h6 class="mb-0 fw-semibold text-dark text-truncate" style="max-width: 140px;"><%= m.title %></h6>
+                                <% if (m.status === 'processing') { %>
+                                    <span class="badge bg-warning text-dark rounded-pill" style="font-size: 0.55rem;">PROCESSING</span>
+                                <% } else if (m.status === 'completed') { %>
+                                    <span class="badge bg-success rounded-pill" style="font-size: 0.55rem;">READY</span>
+                                <% } else { %>
+                                    <span class="badge bg-danger rounded-pill" style="font-size: 0.55rem;">FAILED</span>
+                                <% } %>
+                            </div>
+                            <small class="text-muted"><%= new Date(m.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) %></small>
+                        </a>
+                    <% }); %>
+                <% } else { %>
+                    <div class="p-4 text-center text-muted">
+                        <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+                        <p class="small mt-2 mb-0">No meetings yet.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             MAIN CONTENT AREA
+             ═══════════════════════════════════════════════════════════ -->
+        <div class="col-lg-9 col-xl-10 p-4 p-lg-5">
+
+        <% if (!meeting) { %>
+            <!-- ──── EMPTY STATE ──────────────────────────────────── -->
+            <div class="d-flex flex-column align-items-center justify-content-center text-center" style="min-height: 60vh;">
+                <div class="mb-4" style="opacity: 0.5;">
+                    <i class="bi bi-cloud-upload" style="font-size: 5rem; color: var(--primary);"></i>
+                </div>
+                <h3 class="fw-bold text-dark mb-2">No Meetings Yet</h3>
+                <p class="text-muted mb-4" style="max-width: 420px;">
+                    Upload your meeting recording to get speaker-separated transcripts, extracted action items, and intelligent schedule dates automatically.
+                </p>
+                <a href="/uploads" class="btn btn-primary btn-lg rounded-pill px-5 fw-semibold">
+                    <i class="bi bi-upload me-2"></i>Upload a Recording
+                </a>
+            </div>
+
+        <% } else if (meeting.status === 'processing') { %>
+            <!-- ──── PROCESSING STATE ─────────────────────────────── -->
+            <div class="d-flex flex-column align-items-center justify-content-center text-center" style="min-height: 60vh;" id="processingState">
+                <div class="spinner-border text-primary mb-4" role="status" style="width: 4rem; height: 4rem;">
+                    <span class="visually-hidden">Processing...</span>
+                </div>
+                <h3 class="fw-bold text-dark mb-2">Processing & Diarizing Your Meeting</h3>
+                <p class="text-muted mb-1"><strong>"<%= meeting.title %>"</strong></p>
+                <p class="text-muted mb-4" style="max-width: 420px;">
+                    Extracting audio, running speaker diarization, and detecting calendar dates & commitments.
+                </p>
+                <div class="d-flex gap-3 align-items-center text-muted small">
+                    <span class="d-flex align-items-center gap-1"><i class="bi bi-file-earmark-music text-primary"></i> <%= meeting.file_name %></span>
+                    <span>•</span>
+                    <span>Uploaded <%= new Date(meeting.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) %></span>
+                </div>
+            </div>
+
+            <!-- Auto-refresh: poll for completion -->
+            <script>
+                (function pollStatus() {
+                    setTimeout(async () => {
+                        try {
+                            const res = await fetch('/api/meeting-status/<%= meeting.id %>');
+                            const data = await res.json();
+                            if (data.status === 'completed' || data.status === 'failed') {
+                                window.location.reload();
+                            } else {
+                                pollStatus();
+                            }
+                        } catch { pollStatus(); }
+                    }, 4000);
+                })();
+            </script>
+
+        <% } else if (meeting.status === 'failed') { %>
+            <!-- ──── FAILED STATE ─────────────────────────────────── -->
+            <div class="d-flex flex-column align-items-center justify-content-center text-center" style="min-height: 60vh;">
+                <div class="mb-4">
+                    <i class="bi bi-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+                </div>
+                <h3 class="fw-bold text-dark mb-2">Processing Failed</h3>
+                <p class="text-muted mb-2"><strong>"<%= meeting.title %>"</strong></p>
+                <% if (meeting.summary) { %>
+                    <p class="text-danger small mb-4"><%= meeting.summary %></p>
+                <% } %>
+                <a href="/uploads" class="btn btn-primary rounded-pill px-4 fw-semibold">
+                    <i class="bi bi-arrow-clockwise me-2"></i>Try Again
+                </a>
+            </div>
+
+        <% } else { %>
+            <!-- ══════════════════════════════════════════════════════
+                 COMPLETED — Full Diarized Meeting View
+                 ══════════════════════════════════════════════════════ -->
+
+            <!-- Header -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+                <div>
+                    <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-1 mb-2 fw-semibold border border-success border-opacity-25">
+                        <i class="bi bi-check-circle me-1"></i> Speaker Diarized
+                    </span>
+                    <h2 class="fw-bold text-dark mb-1"><%= meeting.title %></h2>
+                    <p class="text-muted mb-0">
+                        <i class="bi bi-calendar3 me-2"></i><%= new Date(meeting.created_at).toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }) %>
+                        <% if (meeting.duration) { %> • <%= meeting.duration %> duration<% } %>
+                        • <i class="bi bi-file-earmark me-1"></i><%= meeting.file_name %>
+                    </p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary rounded-pill px-3 fw-semibold" data-bs-toggle="modal" data-bs-target="#renameSpeakersModal">
+                        <i class="bi bi-people me-1"></i> Participant Names
+                    </button>
+                    <a href="/uploads" class="btn btn-primary rounded-pill px-4 fw-semibold"><i class="bi bi-plus-lg me-2"></i>New Upload</a>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <ul class="nav nav-tabs mb-4 border-bottom" id="meetingTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active fw-bold px-4 py-3 text-dark" id="transcript-tab" data-bs-toggle="tab"
+                        data-bs-target="#transcript" type="button" role="tab">
+                        <i class="bi bi-chat-quote me-2 text-primary"></i>Speaker Transcript
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-bold px-4 py-3 text-muted" id="summary-tab" data-bs-toggle="tab"
+                        data-bs-target="#summary" type="button" role="tab">
+                        <i class="bi bi-card-checklist me-2 text-secondary"></i>Overview & Insights
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="meetingTabsContent">
+
+                <!-- ═══════════════════════════════════════════════════
+                     TRANSCRIPT TAB (Speaker Diarization Chat UI)
+                     ═══════════════════════════════════════════════════ -->
+                <div class="tab-pane fade show active" id="transcript" role="tabpanel">
+
+                    <!-- Chat Container -->
+                    <div class="bg-white border rounded-4 shadow-sm p-4 mb-4">
+                        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+                            <div>
+                                <h5 class="fw-bold text-dark mb-0">Speaker-Separated Dialogue</h5>
+                                <small class="text-muted">Automatically identified speakers with timestamps</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#renameSpeakersModal">
+                                <i class="bi bi-pencil me-1"></i> Edit Labels
+                            </button>
+                        </div>
+
+                        <% if (meeting.transcript_json && meeting.transcript_json.length > 0) { %>
+                            <div class="speaker-chat-list d-flex flex-column gap-3">
+                                <% 
+                                    const colors = ['bg-primary', 'bg-success', 'bg-purple', 'bg-warning', 'bg-info', 'bg-danger'];
+                                    const speakerMap = meeting.speaker_map || {};
+                                    meeting.transcript_json.forEach(function(seg, index) { 
+                                        const rawSpeaker = seg.speakerId || seg.speakerName || 'Speaker 1';
+                                        const displayName = speakerMap[rawSpeaker] || seg.speakerName || rawSpeaker;
+                                        const speakerNum = parseInt(rawSpeaker.replace(/\D/g, '')) || (index + 1);
+                                        const avatarBg = colors[(speakerNum - 1) % colors.length];
+                                %>
+                                    <div class="d-flex gap-3 align-items-start p-3 rounded-3 border bg-light bg-opacity-50 hover-shadow transition">
+                                        <div class="<%= avatarBg %> text-white rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0 shadow-sm"
+                                            style="width: 44px; height: 44px; font-size: 0.95rem;">
+                                            <%= displayName.charAt(0).toUpperCase() %>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center gap-2 mb-1">
+                                                <span class="fw-bold text-dark speaker-label-name" data-speaker-id="<%= rawSpeaker %>"><%= displayName %></span>
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill px-2 py-1" style="font-size: 0.72rem;">
+                                                    <i class="bi bi-clock me-1"></i><%= seg.timestamp || '[00:00]' %>
+                                                </span>
+                                            </div>
+                                            <p class="text-secondary mb-0" style="line-height: 1.7; font-size: 0.98rem; white-space: pre-wrap;"><%= seg.text %></p>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+
+                        <% } else if (meeting.transcript) { %>
+                            <!-- Plain text fallback formatting -->
+                            <div class="p-3 bg-light rounded-3 border">
+                                <p class="text-muted mb-0" style="white-space: pre-wrap; line-height: 1.8;"><%= meeting.transcript %></p>
+                            </div>
+                        <% } else { %>
+                            <p class="text-muted text-center py-5">No transcript available for this meeting.</p>
+                        <% } %>
+                    </div>
+
+                    <!-- ═══════════════════════════════════════════════════
+                         UPCOMING DEADLINES & SCHEDULE SECTION
+                         ═══════════════════════════════════════════════════ -->
+                    <div class="bg-white border rounded-4 shadow-sm p-4">
+                        <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
+                            <h5 class="fw-bold mb-0 d-flex align-items-center gap-2 text-dark">
+                                <i class="bi bi-calendar-event text-primary"></i> Upcoming Deadlines & Schedule
+                            </h5>
+                            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-1 fw-semibold">
+                                Extracted by AI
+                            </span>
+                        </div>
+
+                        <% if (schedules && schedules.length > 0) { %>
+                            <div class="row g-3">
+                                <% schedules.forEach(function(sched) { %>
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="border rounded-3 p-3 bg-light h-100 d-flex flex-column justify-content-between shadow-sm hover-lift">
+                                            <div>
+                                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                                    <span class="badge bg-primary text-white rounded-pill px-3 py-1 fw-bold" style="font-size: 0.82rem;">
+                                                        📅 <%= sched.formatted_date || sched.event_date %>
+                                                    </span>
+                                                    <span class="badge bg-white text-dark border rounded-pill px-2 py-1 text-uppercase" style="font-size: 0.68rem; letter-spacing: 0.5px;">
+                                                        <%= sched.event_type || 'Deadline' %>
+                                                    </span>
+                                                </div>
+                                                <h6 class="fw-bold text-dark mb-2" style="line-height: 1.4;"><%= sched.goal %></h6>
+                                                <% if (sched.raw_mention) { %>
+                                                    <p class="text-muted small fst-italic mb-3">"<%= sched.raw_mention %>"</p>
+                                                <% } %>
+                                            </div>
+                                            <div class="pt-2 border-top d-flex align-items-center justify-content-between text-muted small">
+                                                <span><i class="bi bi-person me-1"></i><%= sched.owner || 'Unassigned' %></span>
+                                                <span class="text-success fw-semibold"><i class="bi bi-check2-circle me-1"></i>Tracked</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        <% } else { %>
+                            <div class="text-center py-4 text-muted">
+                                <i class="bi bi-calendar-x" style="font-size: 2.2rem; opacity: 0.5;"></i>
+                                <p class="small mt-2 mb-0">No upcoming date commitments identified in this transcript.</p>
+                            </div>
+                        <% } %>
+                    </div>
+
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════
+                     OVERVIEW & INSIGHTS TAB
+                     ═══════════════════════════════════════════════════ -->
+                <div class="tab-pane fade" id="summary" role="tabpanel">
+                    <div class="row g-4">
+
+                        <div class="col-xl-8">
+                            <!-- Executive Summary -->
+                            <div class="bg-white border rounded-4 p-4 shadow-sm mb-4">
+                                <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                                    <i class="bi bi-card-text text-primary"></i> Executive Summary
+                                </h5>
+                                <p class="text-muted mb-0" style="line-height: 1.8;"><%= meeting.summary || 'No summary available.' %></p>
+                            </div>
+
+                            <!-- Key Decisions -->
+                            <div class="bg-white border rounded-4 p-4 shadow-sm">
+                                <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                                    <i class="bi bi-lightbulb text-warning"></i> Key Decisions
+                                </h5>
+                                <% if (meeting.key_decisions && meeting.key_decisions.length > 0) { %>
+                                    <ul class="list-group list-group-flush">
+                                        <% meeting.key_decisions.forEach(function(decision, i) { %>
+                                            <li class="list-group-item px-0 text-dark <%= i === meeting.key_decisions.length - 1 ? 'border-bottom-0' : '' %>">
+                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                <%= decision %>
+                                            </li>
+                                        <% }); %>
+                                    </ul>
+                                <% } else { %>
+                                    <p class="text-muted mb-0">No key decisions were identified in this meeting.</p>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <!-- Action Items -->
+                        <div class="col-xl-4">
+                            <div class="bg-white border rounded-4 p-4 shadow-sm h-100">
+                                <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                                    <i class="bi bi-calendar-check text-primary"></i> Action Items
+                                </h5>
+
+                                <% if (meeting.action_items && meeting.action_items.length > 0) { %>
+                                    <% meeting.action_items.forEach(function(item) { %>
+                                        <div class="d-flex align-items-start gap-3 mb-3 pb-3 border-bottom">
+                                            <input class="form-check-input mt-1 border-secondary" type="checkbox"
+                                                style="width: 1.25rem; height: 1.25rem;">
+                                            <div>
+                                                <p class="mb-1 fw-semibold text-dark"><%= typeof item === 'string' ? item : item.task %></p>
+                                                <div class="d-flex gap-2 align-items-center flex-wrap">
+                                                    <% if (typeof item === 'object' && item.assignee) { %>
+                                                        <span class="badge bg-light text-dark border">
+                                                            <i class="bi bi-person me-1"></i> <%= item.assignee %>
+                                                        </span>
+                                                    <% } %>
+                                                    <% if (typeof item === 'object' && item.deadline) { %>
+                                                        <span class="text-warning small fw-bold">
+                                                            <i class="bi bi-clock me-1"></i> <%= item.deadline %>
+                                                        </span>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% }); %>
+                                <% } else { %>
+                                    <p class="text-muted mb-0">No action items were identified.</p>
+                                <% } %>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        <% } %>
+
+        </div>
+    </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="col-lg-9 col-xl-10 p-4 p-lg-5">
-
-      <!-- Header -->
-      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
-        <div>
-          <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-1 mb-2 fw-semibold border border-danger border-opacity-25">
-            <i class="bi bi-record-circle me-1"></i> Live Meeting Source
-          </span>
-          <h2 class="fw-bold text-dark mb-1">Q3 Product Roadmap Planning</h2>
-          <p class="text-muted mb-0">
-            <i class="bi bi-calendar3 me-2"></i>
-            April 19, 2026 • 5m 0s duration • 72 Participants
-          </p>
-        </div>
-      </div>
-
-      <!-- Tabs -->
-      <ul class="nav nav-tabs mb-4 border-bottom" id="meetingTabs" role="tablist">
-        <li class="nav-item">
-          <button class="nav-link active fw-bold px-4 py-3 text-dark"
-            data-bs-toggle="tab" data-bs-target="#summary">
-            Overview & Insights
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link fw-bold px-4 py-3 text-muted"
-            data-bs-toggle="tab" data-bs-target="#transcript">
-            Full Transcript
-          </button>
-        </li>
-      </ul>
-
-      <div class="tab-content">
-
-        <!-- SUMMARY TAB -->
-        <div class="tab-pane fade show active" id="summary">
-          <div class="row g-4">
-
-            <div class="col-xl-8">
-              <div class="bg-white border rounded-4 p-4 shadow-sm mb-4">
-                <h5 class="fw-bold mb-3">
-                  <i class="bi bi-card-text text-primary"></i>
-                  Executive Summary
-                </h5>
-                <p class="text-muted">
-                  <%= notes?.summary || "Processing..." %>
-                </p>
-              </div>
-
-              <div class="bg-white border rounded-4 p-4 shadow-sm">
-                <h5 class="fw-bold mb-3">
-                  <i class="bi bi-lightbulb text-warning"></i>
-                  Key Concepts
-                </h5>
-
-                <ul class="list-group list-group-flush">
-                  <% notes?.key_concepts?.forEach(concept => { %>
-                    <li class="list-group-item px-0">
-                      <i class="bi bi-check-circle text-primary me-2"></i>
-                      <%= concept %>
-                    </li>
-                  <% }) %>
-                </ul>
-              </div>
-            </div>
-
-            <div class="col-xl-4">
-              <!-- Optional sidebar -->
-            </div>
-
-          </div>
-        </div>
-
-        <!-- TRANSCRIPT TAB -->
-        <div class="tab-pane fade" id="transcript">
-          <div class="bg-white border rounded-4 shadow-sm p-4" style="max-height: 500px; overflow-y: auto;">
-
-            <div class="d-flex gap-3 mb-4">
-              <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
-                style="width: 45px; height: 45px;">S</div>
-              <div>
-                <div class="d-flex gap-2 mb-1">
-                  <h6 class="fw-bold mb-0">Speaker</h6>
-                  <span class="text-muted small">10:00 AM</span>
+    <!-- ═══════════════════════════════════════════════════════════
+         RENAME SPEAKERS MODAL
+         ═══════════════════════════════════════════════════════════ -->
+    <% if (meeting) { %>
+        <div class="modal fade" id="renameSpeakersModal" tabindex="-1" aria-labelledby="renameSpeakersModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-4 shadow border-0">
+                    <div class="modal-header border-bottom-0 pb-0">
+                        <h5 class="modal-title fw-bold text-dark" id="renameSpeakersModalLabel">
+                            <i class="bi bi-person-gear text-primary me-2"></i>Participant Names
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body py-3">
+                        <p class="text-muted small mb-3">
+                            Assign participant names to replace generic speaker labels (e.g. Speaker 1 → John Doe).
+                        </p>
+                        <form id="renameSpeakersForm">
+                            <% 
+                                const detectedSpeakers = new Set();
+                                if (meeting.transcript_json && meeting.transcript_json.length > 0) {
+                                    meeting.transcript_json.forEach(s => detectedSpeakers.add(s.speakerId || s.speakerName));
+                                } else {
+                                    detectedSpeakers.add('Speaker 1');
+                                    detectedSpeakers.add('Speaker 2');
+                                    detectedSpeakers.add('Speaker 3');
+                                }
+                                const currentMap = meeting.speaker_map || {};
+                                Array.from(detectedSpeakers).forEach(function(spkId) {
+                                    const currentVal = currentMap[spkId] || '';
+                            %>
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold text-dark small mb-1"><%= spkId %></label>
+                                    <input type="text" class="form-key-mapping form-control rounded-3" 
+                                           data-speaker-id="<%= spkId %>" 
+                                           placeholder="e.g. Participant Name" 
+                                           value="<%= currentVal %>">
+                                </div>
+                            <% }); %>
+                        </form>
+                    </div>
+                    <div class="modal-footer border-top-0 pt-0">
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" id="saveSpeakersBtn" class="btn btn-primary rounded-pill px-4 fw-semibold">
+                            <i class="bi bi-check2 me-1"></i> Save Names
+                        </button>
+                    </div>
                 </div>
-                <p class="text-muted mb-0">
-                  Very simple, right? Now, before I move ahead, I just want to see, I see a lot of people in the, let me stop the sharing. Wow, we have what 72 participants. Let's run a poll and see who's here. So what I'm going to do is I'm going to run a poll now and share the results with you. So first poll I have is, what's your experience using Zoom? Rate yourself. Are you an expert? This is your first time. I'm going to do a poll. Please accept my apologies that I won't be able to monitor the chat because I found to do I'm not that much of a multitasking guy. So I will look at the chat maybe later on and then maybe host responses in the. What's up group? So we have a good amount of responses. And I will end the polling in three to one. So as you can see, we have some flash timers. Some who have attended Zoom meetings. Some have conducted meetings and we have two experts, which is great. Right, we can share from each other and understand. Okay, I'll do one more poll. Because I want to know where I hold from. I'm going to do a poll. Yeah, it is willing. I'm happy to see so many of members of my. Those masters from bar and joining us. Excellent. I will close the poll in three to one. So as we can see, we have people who have attended this meeting for the first time. So for them, it might be little overwhelming to go to the Zoom and create a meeting from scratch. That's why I have created the WhatsApp group. I want you all if you are really interested in doing your own Zoom meetings. As I said, go to zoom.com, create an account. Follow the instruction that I have shared and I'll be sharing the PowerPoint also in the WhatsApp group. Create the meeting. Maybe in the initial stage, just have a meeting with two or three people. Then you can practice for your actual dose master meeting. Make a trial run with your XCOM maybe. See how it works. And then you can do the actual dose master meeting. Now we move into the controls related to. Like how did I create this poll? How did I share the poll with you all? And how could you do? So you could use a poll like this, for example, in a dose master meeting for choosing the best speaker. Or the best table topic, best role player. So now you have one role less required in dose master meetings. You don't need a vote counter. Correct? Because the dose master of the day will create the polls. And once the speaking segment is over, launch the poll. And that's it. You know, you know, you're who's the best speaker. And we will do that for the table topics by the way today. Now comes. Once the meeting started. So basically that I have started created this meeting. Whenever you are ready to start.
-                </p>
-              </div>
             </div>
-
-          </div>
         </div>
 
-      </div>
+        <script>
+            document.getElementById('saveSpeakersBtn')?.addEventListener('click', async () => {
+                const inputs = document.querySelectorAll('.form-key-mapping');
+                const speakerMap = {};
+                inputs.forEach(input => {
+                    const spkId = input.getAttribute('data-speaker-id');
+                    const val = input.value.trim();
+                    if (val) {
+                        speakerMap[spkId] = val;
+                    }
+                });
 
-    </div> <!-- END Main Content -->
+                try {
+                    const res = await fetch('/api/meetings/<%= meeting.id %>/speakers', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ speakerMap })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        window.location.reload();
+                    } else {
+                        alert(data.error || 'Failed to update speaker names.');
+                    }
+                } catch (err) {
+                    alert('Error saving speaker names.');
+                }
+            });
+        </script>
+    <% } %>
 
-  </div> <!-- END Row -->
-</div> <!-- END Container -->
+    <style>
+        .bg-purple { background-color: #6f42c1 !important; }
+        .hover-shadow:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+        .transition { transition: all 0.2s ease-in-out; }
+    </style>
 
-<%- include("partials/footer") %>
+    <%- include("partials/footer") %>

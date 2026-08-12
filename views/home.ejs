@@ -16,7 +16,11 @@
           <p class="lead text-muted mb-4">Keep your tasks, notes, and goals organized without the clutter. Briefly
             silently captures what matters in your meetings.</p>
           <div class="d-grid gap-3 d-md-flex mt-4">
-            <a href="/login" class="btn btn-primary btn-lg px-4 rounded-pill">Get Started Free</a>
+            <% if (typeof user !== 'undefined' && user) { %>
+              <a href="/dashboard" class="btn btn-primary btn-lg px-4 rounded-pill">Go to Dashboard</a>
+            <% } else { %>
+              <a href="/login" class="btn btn-primary btn-lg px-4 rounded-pill">Get Started Free</a>
+            <% } %>
             <a href="/working" class="btn btn-outline-secondary btn-lg px-4 rounded-pill">See how it works</a>
           </div>
         </div>

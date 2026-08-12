@@ -1,0 +1,183 @@
+import { Router } from "express";
+import multer from "multer";
+import path from "path";
+import os from "os";
+import { fileURLToPath } from "url";
+import pool from "../config/db.js";
+import { convertToAudio } from "../utils/ffmpeg.js";
+import { transcribeAndDiarizeAudio } from "../services/transcriptionService.js";
+import { analyzeTranscript } from "../services/aiService.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const router = Router();
+
+// ─── Multer config ───────────────────────────────────────────
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const targetDir = process.env.VERCEL
+      ? os.tmpdir()
+      : path.resolve(__dirname, "../../uploads");
+    cb(null, targetDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = `meeting_${Date.now()}_${file.originalname}`;
+    cb(null, uniqueName);
+  },
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 500 * 1024 * 1024 }, // 500MB max
+  fileFilter: (req, file, cb) => {
+    const allowed = /mp4|mp3|wav|m4a|webm|ogg|mpeg|audio|video/;
+    const extOk = allowed.test(path.extname(file.originalname).toLowerCase());
+    const mimeOk = allowed.test(file.mimetype);
+    if (extOk || mimeOk) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only audio/video files are allowed."));
+    }
+  },
+});
+
+// ─── POST /upload-process ────────────────────────────────────
+router.post("/", (req, res, next) => {
+  upload.single("meetingFile")(req, res, (err) => {
+    if (err) {
+      console.error("❌ Multer upload error:", err.message);
+      if (err.code === "LIMIT_FILE_SIZE") {
+        return res.redirect("/uploads?error=File is too large. Maximum size is 500MB.");
+      }
+      return res.redirect(`/uploads?error=${encodeURIComponent(err.message)}`);
+    }
+    next();
+  });
+}, async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.redirect("/uploads?error=No file selected");
+    }
+
+    const userId = req.session.user.id;
+    const title = req.body.meetingTitle?.trim() || req.file.originalname;
+    const fileName = req.file.originalname;
+    const filePath = req.file.path;
+
+    console.log(`📁 File uploaded: ${fileName} (${(req.file.size / 1024 / 1024).toFixed(1)}MB) at ${filePath}`);
+
+    // Create meeting record with 'processing' status
+    const [result] = await pool.query(
+      "INSERT INTO meetings (user_id, title, file_name, file_path, status) VALUES (?, ?, ?, ?, 'processing')",
+      [userId, title, fileName, filePath]
+    );
+
+    const meetingId = result.insertId;
+    console.log(`📁 Meeting #${meetingId} created — processing "${fileName}"...`);
+
+    if (process.env.VERCEL) {
+      // In Serverless environment, await pipeline completion before responding
+      try {
+        await processFile(meetingId, filePath, fileName);
+      } catch (err) {
+        console.error(`❌ Pipeline failed for meeting #${meetingId}:`, err.message);
+      }
+      return res.redirect(`/dashboard/${meetingId}`);
+    } else {
+      // Redirect immediately in local/persistent mode — processing happens in background
+      res.redirect(`/dashboard/${meetingId}`);
+
+      // ─── Background processing pipeline ──────────────────────
+      processFile(meetingId, filePath, fileName).catch((err) => {
+        console.error(`❌ Pipeline failed for meeting #${meetingId}:`, err.message);
+      });
+    }
+  } catch (err) {
+    console.error("Upload error:", err);
+    res.redirect("/uploads?error=Upload failed. Please try again.");
+  }
+});
+
+/**
+ * Background processing: convert → transcribe & diarize → AI analyze → save DB & schedules
+ */
+async function processFile(meetingId, filePath, fileName) {
+  try {
+    let audioPath = filePath;
+
+    // If video, extract audio first
+    const ext = path.extname(fileName).toLowerCase();
+    if ([".mp4", ".webm", ".mkv", ".avi", ".mov"].includes(ext)) {
+      console.log(`🎬 Extracting audio from video...`);
+      audioPath = await convertToAudio(filePath);
+    }
+
+    // Transcribe & Diarize with Deepgram (or Whisper fallback)
+    console.log(`🎤 Transcribing & Diarizing audio...`);
+    const transcriptionResult = await transcribeAndDiarizeAudio(audioPath);
+
+    const transcriptText = transcriptionResult.text;
+    const transcriptJson = JSON.stringify(transcriptionResult.segments || []);
+
+    if (!transcriptText) {
+      await pool.query(
+        "UPDATE meetings SET status = 'failed', summary = ? WHERE id = ?",
+        ["Transcription returned empty results.", meetingId]
+      );
+      return;
+    }
+
+    // Get meeting creation date for relative date resolution
+    const [meetingRows] = await pool.query("SELECT created_at FROM meetings WHERE id = ?", [meetingId]);
+    const meetingDate = meetingRows.length > 0 ? meetingRows[0].created_at : new Date();
+
+    // AI analysis & date/schedule extraction
+    console.log(`🧠 Analyzing transcript & extracting dates with AI...`);
+    const analysis = await analyzeTranscript(transcriptText, meetingDate);
+
+    // Save core results to meetings DB table
+    await pool.query(
+      `UPDATE meetings 
+       SET transcript = ?, transcript_json = ?, summary = ?, key_decisions = ?, action_items = ?, status = 'completed' 
+       WHERE id = ?`,
+      [
+        transcriptText,
+        transcriptJson,
+        analysis.summary,
+        JSON.stringify(analysis.keyDecisions),
+        JSON.stringify(analysis.actionItems),
+        meetingId,
+      ]
+    );
+
+    // Insert extracted schedules into meeting_schedules table for future context & reminders
+    if (analysis.schedules && analysis.schedules.length > 0) {
+      console.log(`📅 Storing ${analysis.schedules.length} extracted schedule commitment(s)...`);
+      for (const item of analysis.schedules) {
+        await pool.query(
+          `INSERT INTO meeting_schedules 
+           (meeting_id, event_date, formatted_date, goal, event_type, owner, raw_mention) 
+           VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          [
+            meetingId,
+            item.event_date,
+            item.formatted_date,
+            item.goal,
+            item.event_type,
+            item.owner,
+            item.raw_mention,
+          ]
+        );
+      }
+    }
+
+    console.log(`✅ Meeting #${meetingId} processing & diarization complete!`);
+  } catch (err) {
+    console.error(`❌ Processing error for meeting #${meetingId}:`, err.message);
+    await pool.query(
+      "UPDATE meetings SET status = 'failed', summary = ? WHERE id = ?",
+      [`Processing failed: ${err.message}`, meetingId]
+    );
+  }
+}
+
+export default router;

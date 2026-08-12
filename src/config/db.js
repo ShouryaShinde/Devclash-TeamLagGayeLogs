@@ -1,0 +1,126 @@
+import mysql from "mysql2/promise";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Resolve .env relative to this file's location (src/config/db.js → ../../.env)
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+
+const dbConfig = {
+  host: process.env.DB_HOST || "localhost",
+  port: parseInt(process.env.DB_PORT || "3306", 10),
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "",
+  database: process.env.DB_NAME || "briefly_db",
+  waitForConnections: true,
+  connectionLimit: process.env.VERCEL ? 5 : 10,
+  queueLimit: 0,
+  ...(process.env.DB_SSL === "true" || process.env.DB_SSL === "1"
+    ? { ssl: { rejectUnauthorized: false } }
+    : {}),
+};
+
+const pool = mysql.createPool(dbConfig);
+
+let isInitialized = false;
+
+/**
+ * Initialize the database — creates the DB and all tables if they don't exist.
+ */
+export async function initDatabase() {
+  if (isInitialized) return;
+
+  // Try creating the database if permitted (e.g. local MySQL)
+  try {
+    const tempConfig = { ...dbConfig };
+    delete tempConfig.database;
+    const tempPool = mysql.createPool(tempConfig);
+    const dbName = process.env.DB_NAME || "briefly_db";
+    await tempPool.query(
+      `CREATE DATABASE IF NOT EXISTS \`${dbName}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
+    );
+    await tempPool.end();
+    console.log(`✅ Database "${dbName}" is ready.`);
+  } catch (err) {
+    console.warn("⚠️ Could not create DB (might be pre-created by cloud provider):", err.message);
+  }
+
+  // Create users table
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log("✅ Users table is ready.");
+  } catch (err) {
+    console.error("❌ Failed to create users table:", err.message);
+    throw err;
+  }
+
+  // Create meetings table
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS meetings (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        file_name VARCHAR(255) NOT NULL,
+        file_path VARCHAR(500),
+        transcript LONGTEXT,
+        transcript_json LONGTEXT,
+        speaker_map JSON,
+        summary TEXT,
+        key_decisions JSON,
+        action_items JSON,
+        duration VARCHAR(50),
+        status ENUM('processing','completed','failed') DEFAULT 'processing',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `);
+
+    // Add columns if table already existed without them
+    try {
+      await pool.query(`ALTER TABLE meetings ADD COLUMN transcript_json LONGTEXT`);
+    } catch { /* column exists */ }
+    try {
+      await pool.query(`ALTER TABLE meetings ADD COLUMN speaker_map JSON`);
+    } catch { /* column exists */ }
+
+    console.log("✅ Meetings table is ready.");
+  } catch (err) {
+    console.error("❌ Failed to create meetings table:", err.message);
+    throw err;
+  }
+
+  // Create meeting_schedules table
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS meeting_schedules (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        meeting_id INT NOT NULL,
+        event_date VARCHAR(50),
+        formatted_date VARCHAR(100),
+        goal TEXT NOT NULL,
+        event_type VARCHAR(50) DEFAULT 'deadline',
+        owner VARCHAR(100) DEFAULT 'Unassigned',
+        raw_mention VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (meeting_id) REFERENCES meetings(id) ON DELETE CASCADE
+      )
+    `);
+    console.log("✅ Meeting schedules table is ready.");
+    isInitialized = true;
+  } catch (err) {
+    console.error("❌ Failed to create meeting_schedules table:", err.message);
+    throw err;
+  }
+}
+
+export default pool;
